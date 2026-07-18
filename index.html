@@ -1,0 +1,2157 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>중계양업성당 WYD 관리 프로그램</title>
+<style>
+  :root{
+    --bg:#F5F3EC; --card:#fff; --ink:#2B2A26; --sub:#6B6A63; --line:#E3E0D6;
+    --blue:#185FA5; --blueBg:#E6F1FB; --amber:#854F0B; --amberBg:#FAEEDA;
+    --green:#3B6D11; --greenBg:#EAF3DE; --red:#A32D2D; --redBg:#FCEBEB; --gold:#C8A04B;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Pretendard',system-ui,-apple-system,'Apple SD Gothic Neo',sans-serif;background:var(--bg);color:var(--ink);font-size:14px}
+  header{background:var(--card);border-bottom:1px solid var(--line);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:5}
+  .logo{display:flex;align-items:center;gap:11px}
+  .mark{width:34px;height:34px;border-radius:9px;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px}
+  .wyd-logo{height:44px;width:auto;display:block}
+  .parish-logo{height:46px;width:auto;display:block}
+  .parish-info{display:flex;flex-direction:row;align-items:center;gap:8px;line-height:1.4;border-left:1px solid var(--line);padding-left:12px;margin-left:4px;flex-wrap:wrap}
+  .parish-info .pi-name{font-size:12px;font-weight:600;color:var(--ink)}
+  .parish-info .pi-addr{font-size:11.5px;color:var(--sub)}
+  .parish-info .pi-tel{font-size:11.5px}
+  .parish-info .pi-tel a{color:var(--blue)}
+  .parish-info .pi-sep{color:var(--line)}
+  .h-titles{min-width:0}
+  .h-title{font-size:15px;font-weight:600}.h-sub{font-size:11.5px;color:var(--sub)}
+  select,button,input,textarea{font-family:inherit}
+  select{font-size:13px;padding:5px 8px;border-radius:7px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+  .shell{display:flex;max-width:1400px;margin:0 auto}
+  nav{width:180px;flex-shrink:0;padding:16px 12px;border-right:1px solid var(--line);align-self:flex-start;position:sticky;top:60px}
+  .nav-btn{width:100%;display:flex;align-items:center;gap:9px;padding:9px 12px;margin-bottom:3px;border-radius:8px;border:none;cursor:pointer;text-align:left;font-size:13.5px;background:transparent;color:var(--ink)}
+  .nav-ico{flex:0 0 auto}
+  .nav-txt{display:flex;flex-direction:column;line-height:1.25;min-width:0}
+  .nav-en{font-size:10.5px;color:var(--sub);font-weight:400}
+  .nav-btn.active .nav-en{color:var(--blue);opacity:.75}
+  .nav-btn.active{background:var(--blueBg);color:var(--blue);font-weight:600}
+  .nav-note{margin-top:16px;padding:10px 12px;background:var(--card);border:1px solid var(--line);border-radius:9px;font-size:11.5px;color:var(--sub);line-height:1.6}
+  .nav-link{display:flex;align-items:center;gap:8px;margin-top:10px;padding:9px 12px;border:1px solid var(--line);border-radius:9px;font-size:12.5px;color:var(--blue);text-decoration:none;font-weight:600;background:var(--card)}
+  .nav-link:hover{background:var(--blueBg);border-color:var(--blue)}
+  main{flex:1;padding:22px 24px;min-width:0}
+  .sec-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+  h2.sec{margin:0;font-size:20px;font-weight:600}
+  .sec-sub{margin:6px 0 18px 0;font-size:13.5px;color:var(--sub)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+  .dash-nav-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+  .dash-nav-card{display:flex;flex-direction:column;gap:9px;padding:17px 20px;background:var(--card);border:1px solid var(--line);border-radius:12px;cursor:pointer;text-align:left;transition:all .12s;font-family:inherit;position:relative;min-height:210px}
+  .dash-nav-card:hover{border-color:var(--blue);background:var(--blueBg);transform:translateY(-1px)}
+  .dash-nav-card .dnc-head{display:flex;align-items:center;gap:10px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .dash-nav-card .dni-ico{font-size:20px;flex:0 0 auto}
+  .dash-nav-card .dni-txt{display:flex;flex-direction:column;line-height:1.2;min-width:0;flex:1}
+  .dash-nav-card .dni-ko{font-size:15px;font-weight:700;color:var(--ink)}
+  .dash-nav-card .dni-en{font-size:10.5px;color:var(--sub)}
+  .dash-nav-card .dni-cnt{font-size:12px;color:var(--blue);font-weight:700;background:var(--blueBg);padding:3px 10px;border-radius:10px;white-space:nowrap;flex:0 0 auto}
+  .dash-nav-card .dni-cnt.amber{color:var(--amber);background:#fef3e2}
+  .dash-nav-card .dni-cnt.red{color:var(--red);background:#fde8e8}
+  .dash-nav-card .dnc-summary{font-size:13px;color:var(--ink);line-height:1.4;font-weight:500}
+  .dash-nav-card .dnc-items{display:flex;flex-direction:column;gap:4px;flex:1}
+  .dash-nav-card .dnc-item{font-size:12.5px;color:var(--sub);line-height:1.5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:2px 0;border-bottom:1px solid var(--line)}
+  .dash-nav-card .dnc-go{font-size:12px;color:var(--blue);font-weight:600;opacity:.6;transition:opacity .12s;margin-top:auto}
+  .dash-nav-card:hover .dnc-go{opacity:1}
+  .grid{display:grid;gap:12px}
+  .metric{background:var(--bg);border-radius:10px;padding:13px 15px}
+  .metric .l{font-size:12.5px;color:var(--sub)}.metric .v{font-size:25px;font-weight:600;margin-top:2px}
+  table{width:100%;border-collapse:collapse;font-size:13px;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  th{text-align:left;padding:9px 11px;background:var(--bg);color:var(--sub);font-weight:600;font-size:12px;border-bottom:1px solid var(--line)}
+  td{padding:9px 11px;border-bottom:1px solid var(--line)}
+  .badge{font-size:12px;font-weight:500;padding:2px 9px;border-radius:6px;white-space:nowrap;display:inline-block}
+  tr.gori-today td{background:var(--blueBg) !important}
+  .b-blue{background:var(--blueBg);color:var(--blue)}.b-amber{background:var(--amberBg);color:var(--amber)}
+  .b-green{background:var(--greenBg);color:var(--green)}.b-red{background:var(--redBg);color:var(--red)}
+  .b-gray{background:#F1EFE8;color:#5F5E5A}
+  .btn{padding:7px 13px;font-size:13px;border:1px solid var(--line);border-radius:8px;background:var(--card);cursor:pointer;color:var(--ink);display:inline-flex;align-items:center;gap:5px}
+  .btn:hover{background:var(--bg)}
+  .btn-primary{background:var(--blue);color:#fff;border-color:var(--blue)}.btn-primary:hover{background:#14528f}
+  .btn-sm{padding:3px 9px;font-size:12px;border:1px solid var(--line);border-radius:6px;background:var(--card);cursor:pointer;color:var(--ink);margin-left:4px}
+  .btn-sm:hover{background:var(--bg)}.btn-danger{color:var(--red);border-color:#E8B6B6}
+  .step{margin-right:5px;padding:3px 8px;font-size:12px;border:1px solid var(--line);border-radius:6px;background:var(--card);cursor:pointer;color:var(--ink)}
+  .stepmini{width:22px;height:22px;padding:0;margin:0 2px;font-size:13px;line-height:1;border:1px solid var(--line);border-radius:5px;background:var(--card);cursor:pointer;color:var(--ink);vertical-align:middle}
+  .stepmini:hover{background:var(--bg)}
+  .link{margin-top:12px;display:inline-flex;align-items:center;gap:3px;background:none;border:none;color:var(--blue);font-size:13px;font-weight:500;cursor:pointer;padding:0}
+  .warn{background:var(--redBg);border:1px solid #F0C0C0;border-radius:10px;padding:11px 15px;display:flex;gap:10px;align-items:flex-start;font-size:13.5px;margin-top:14px}
+  .note{background:var(--amberBg);border:1px solid #E8C98A;border-radius:10px;padding:11px 15px;font-size:13px;color:var(--amber);margin-top:14px;line-height:1.7}
+  .scroll{overflow-x:auto}
+  .chip-row{display:flex;flex-wrap:wrap;gap:8px}
+  .timeline{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px}
+  .day{min-width:148px;flex-shrink:0;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .banner{background:var(--amberBg);border:1px solid #E8C98A;color:var(--amber);font-size:12.5px;padding:8px 14px;text-align:center}
+  .chkbox{width:22px;height:22px;border-radius:6px;border:1px solid var(--line);background:var(--card);cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+  .chkbox.on{border-color:var(--green);background:var(--greenBg)}
+  .org-node{border:1px solid var(--line);border-radius:10px;padding:9px 13px;min-width:140px;background:var(--card);text-align:center}
+  .org-node.key{background:var(--blueBg);border-color:var(--blue)}
+  .org-line{width:1px;height:16px;background:var(--line)}
+  .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+  .modal{background:var(--card);border-radius:14px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;padding:22px 24px}
+  .modal h3{margin:0 0 16px;font-size:17px;font-weight:600}
+  .field{margin-bottom:12px}
+  .field label{display:block;font-size:12.5px;color:var(--sub);margin-bottom:4px}
+  .field input,.field select,.field textarea{width:100%;padding:8px 10px;font-size:13.5px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}
+  .field textarea{min-height:56px;resize:vertical}
+  .modal-actions{display:flex;justify-content:space-between;gap:8px;margin-top:18px}
+  .kv{display:flex;font-size:13px;padding:5px 0;border-bottom:1px solid var(--line)}
+  .kv .k{color:var(--sub);min-width:128px}.kv .v{font-weight:500}
+  .occ{display:flex;flex-direction:column;gap:3px;margin-top:6px}
+  .occ a{color:var(--blue);text-decoration:none}
+  .fam-short{display:none}
+  @media(max-width:760px){
+    header{padding:10px 14px}
+    .h-sub{display:none}
+    .shell{flex-direction:column}
+    /* 사이드바 → 상단 가로 스크롤 탭 */
+    nav{width:100%;min-height:auto;border-right:none;border-bottom:1px solid var(--line);
+        display:flex;gap:6px;overflow-x:auto;padding:10px 12px;-webkit-overflow-scrolling:touch;
+        position:sticky;top:0;background:var(--bg);z-index:4}
+    .nav-btn{width:auto;flex:0 0 auto;white-space:nowrap;margin-bottom:0;padding:8px 12px;
+             border:1px solid var(--line);border-radius:999px;font-size:13px}
+    .nav-btn.active{border-color:var(--blue)}
+    .nav-txt{flex-direction:row;align-items:center}
+    .nav-en{display:none}
+    .nav-note{display:none}
+    .nav-link{flex:0 0 auto;margin-top:0;white-space:nowrap;border-radius:999px;padding:8px 12px}
+    main{padding:14px}
+    h2.sec{font-size:18px}
+    .sec-row{flex-direction:column;align-items:stretch;gap:8px}
+    /* 헤더 우측 버튼(엑셀·인쇄·선택인쇄·추가): 좁은 화면에서 컴팩트하게 */
+    .sec-row > div:last-child{gap:6px !important}
+    .sec-row .btn{padding:7px 10px;font-size:12.5px}
+    .sec-row > div:last-child .btn-primary{width:100%;justify-content:center}
+    /* 그리드는 한 열로 */
+    .grid{grid-template-columns:1fr !important}
+    .dash-2col{grid-template-columns:1fr !important}
+    /* 표는 가로 스크롤 유지 + 터치하기 쉽게 */
+    .scroll{-webkit-overflow-scrolling:touch}
+    table{font-size:12.5px}
+    th,td{padding:8px 9px}
+    .btn-sm{padding:5px 10px;font-size:12px}   /* 터치 타깃 확대 */
+    .step{padding:5px 10px}
+    .modal{max-width:100%;padding:18px 16px}
+    /* iOS 입력 시 자동 확대 방지 + 터치 여유 */
+    .field input,.field select,.field textarea{font-size:16px;padding:10px 12px}
+    select{font-size:15px;padding:7px 10px}
+    .timeline .day{min-width:130px}
+    .metric .v{font-size:22px}
+    /* 조직도 임원 노드 가로 스크롤 */
+    .org-node{min-width:130px}
+    /* 반응형 표: table.resp 는 모바일에서 카드형으로 전환 */
+    table.resp{border:none;background:transparent}
+    table.resp thead{display:none}
+    table.resp tbody{display:block}
+    table.resp tr{display:flex;flex-wrap:wrap;align-items:stretch;
+                  background:var(--card);border:1px solid var(--line);
+                  border-radius:12px;padding:4px 13px 8px;margin-bottom:10px;
+                  box-shadow:0 1px 2px rgba(0,0,0,.03)}
+    table.resp td{display:flex;flex-direction:column;align-items:flex-start;gap:1px;
+                  border:none;padding:6px 0 5px;text-align:left;width:100%;box-sizing:border-box;min-width:0;
+                  position:relative}
+    /* 옅은 구분선(카드 안, 그라데이션) — 왼쪽에서 오른쪽으로 사라짐 */
+    table.resp td::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;
+                  background:linear-gradient(to right,var(--line),transparent)}
+    table.resp td::before{content:attr(data-label);text-align:left;
+                          color:var(--sub);font-weight:600;font-size:11.5px;line-height:1.2;margin-bottom:1px}
+    table.resp td{font-size:15px;line-height:1.35}
+    table.resp td a{font-size:15px;word-break:break-all}
+    table.resp td .occ{align-items:flex-start}
+
+    /* ── 반 칸(50%) ── */
+    table.resp td[data-label="유형"],table.resp td[data-label="면적"],
+    table.resp td[data-label="번호"],table.resp td[data-label="구역"],table.resp td[data-label="아파트단지"],
+    table.resp td[data-label="가족 인원"],
+    table.resp td[data-label="직책"],table.resp td[data-label="이름"],
+    table.resp td[data-label="담당 임무"],table.resp td[data-label="언어 구사"]{width:50%}
+    /* ── 1/3 칸: 홈스테이 언어 ── */
+    table.resp td[data-label="언어"]{width:34%}
+    /* ── 1/4 칸(25%) ── */
+    table.resp td[data-label="수용"],table.resp td[data-label="냉방"],
+    table.resp td[data-label="남녀구분"],table.resp td[data-label="상태"]{width:25%}
+    /* ── 전체 폭(100%) ── */
+    table.resp td[data-label="공간"],table.resp td[data-label="가정"],
+    table.resp td[data-label="주소"],table.resp td[data-label="연락처"],
+    table.resp td[data-label="비고"],table.resp td[data-label="숙박 방문자"],
+    table.resp td[data-label="숙박자"],table.resp td[data-label="숙박 장소"],
+    table.resp td[data-label="배정 명단"],table.resp td[data-label="그룹대표"],
+    table.resp td[data-label="기간"],table.resp td[data-label="관리"]{width:100%}
+    table.resp td[data-label="관리"]{flex-direction:row;gap:8px;padding-top:8px}
+    table.resp td[data-label="관리"]::after{display:none}
+    /* 방문자 그룹 소제목 행: 카드 모드에서 한 줄 블록으로 표시 */
+    table.resp tr.grp-head{display:block;background:var(--bg);border:none;border-radius:8px;
+      padding:4px 6px;margin:14px 0 4px;box-shadow:none}
+    table.resp tr.grp-head td{display:block;width:100%;padding:0}
+    table.resp tr.grp-head td::before{display:none}
+    table.resp tr.grp-head td::after{display:none}
+
+    /* ── 성당시설: "공간"·"유형" 라벨 숨김(값만 표시) ── */
+    table.resp td[data-label="공간"]::before{display:none}
+    table.resp td[data-label="공간"]{font-size:17px;font-weight:700}
+    table.resp td[data-label="유형"]::before{display:none}
+    table.resp td[data-label="유형"]{color:var(--sub)}
+
+    /* ── 성당시설(resp-fac) 전용 배치: R01+이름 한 줄 / 유형+면적 한 줄 ── */
+    table.resp-fac td[data-label="번호"]{order:1;width:26%;font-size:15px;color:var(--sub);font-weight:600;justify-content:center;align-items:center}
+    table.resp-fac td[data-label="번호"]::before{display:none}
+    table.resp-fac td[data-label="공간"]{order:2;width:74%;justify-content:center}
+    table.resp-fac td[data-label="유형"]{order:3;width:50%}
+    table.resp-fac td[data-label="면적"]{order:4;width:50%}
+    table.resp-fac td[data-label="수용"]{order:5;width:25%}
+    table.resp-fac td[data-label="냉방"]{order:6;width:25%}
+    table.resp-fac td[data-label="남녀구분"]{order:7;width:25%}
+    table.resp-fac td[data-label="상태"]{order:8;width:25%}
+    table.resp-fac td[data-label="비고"]{order:9;width:100%}
+    table.resp-fac td[data-label="숙박 방문자"]{order:10;width:100%}
+    table.resp-fac td[data-label="관리"]{order:11;width:100%}
+
+    /* ── 방문자(resp-vis) 전용 배치: 번호·그룹 / 이름·성별 / 연락처 / 국가·언어·역할·상태 / 숙박+기간 / 비고 ── */
+    table.resp-vis td[data-label="번호"]{order:1;width:50%}
+    table.resp-vis td[data-label="그룹"]{order:2;width:50%}
+    table.resp-vis td[data-label="이름"]{order:3;width:70%;font-size:16px}
+    table.resp-vis td[data-label="성별"]{order:4;width:30%}
+    table.resp-vis td[data-label="연락처"]{order:5;width:100%}
+    table.resp-vis td[data-label="국가"]{order:6;width:25%}
+    table.resp-vis td[data-label="언어"]{order:7;width:25%}
+    table.resp-vis td[data-label="역할"]{order:8;width:25%}
+    table.resp-vis td[data-label="상태"]{order:9;width:25%}
+    table.resp-vis td[data-label="숙박 장소"]{order:10;width:100%}
+    table.resp-vis td[data-label="기간"]{order:11;width:100%}
+    table.resp-vis td[data-label="비고"]{order:12;width:100%}
+    table.resp-vis td[data-label="관리"]{order:13;width:100%}
+    /* ── 봉사자 명단(resp-vol) 전용: 소속·팀 / 직책·이름 ── */
+    table.resp-vol td[data-label="소속 분과"]{order:1;width:50%}
+    table.resp-vol td[data-label="팀"]{order:2;width:50%}
+    table.resp-vol td[data-label="직책"]{order:3;width:40%}
+    table.resp-vol td[data-label="이름"]{order:4;width:60%;font-size:15px}
+    table.resp-vol td[data-label="연락처"]{order:5;width:100%}
+    table.resp-vol td[data-label="담당 임무"]{order:6;width:50%}
+    table.resp-vol td[data-label="언어 구사"]{order:7;width:50%}
+    table.resp-vol td[data-label="비고"]{order:8;width:100%}
+    table.resp-vol td[data-label="관리"]{order:9;width:100%}
+    /* 고리기도(resp-gori): 날짜·요일 / 단체 / 대표자·비고 */
+    table.resp-gori td[data-label="날짜"]{order:1;width:50%}
+    table.resp-gori td[data-label="요일"]{order:2;width:50%}
+    table.resp-gori td[data-label="담당 단체"]{order:3;width:100%;font-size:15px}
+    table.resp-gori td[data-label="대표자"]{order:4;width:60%}
+    table.resp-gori td[data-label="비고"]{order:5;width:40%}
+    table.resp-gori td[data-label="관리"]{order:6;width:100%}
+    /* ── 홈스테이(resp-hs) 전용: 번호·구역·단지명 한 줄 / 가족인원·언어·수용·상태 한 줄 ── */
+    table.resp-hs td[data-label="번호"]{order:1;width:25%}
+    table.resp-hs td[data-label="구역"]{order:2;width:35%}
+    table.resp-hs td[data-label="아파트단지"]{order:3;width:40%}
+    table.resp-hs td[data-label="가정"]{order:4;width:100%;font-size:16px}
+    table.resp-hs td[data-label="주소"]{order:5;width:100%}
+    table.resp-hs td[data-label="연락처"]{order:6;width:100%}
+    table.resp-hs td[data-label="가족 인원"]{order:7;width:100%}
+    table.resp-hs td[data-label="가족 인원"] .fam-full{display:none}
+    table.resp-hs td[data-label="가족 인원"] .fam-short{display:inline}
+    table.resp-hs td[data-label="언어"]{order:8;width:25%}
+    table.resp-hs td[data-label="수용"]{order:9;width:25%}
+    table.resp-hs td[data-label="요청 성별"]{order:10;width:25%}
+    table.resp-hs td[data-label="상태"]{order:11;width:25%}
+    table.resp-hs td[data-label="비고"]{order:12;width:100%}
+    table.resp-hs td[data-label="숙박자"]{order:13;width:100%}
+    table.resp-hs td[data-label="관리"]{order:14;width:100%}
+    table.resp-hs{min-width:0 !important}
+    .resp-scroll{overflow-x:visible}
+  }
+  @media(max-width:420px){
+    .mark{width:30px;height:30px}
+    .wyd-logo{height:34px}
+    .parish-logo{height:38px}
+    .parish-info{display:none}
+    .h-title{font-size:15px}
+    th,td{padding:7px 7px;font-size:13px}
+    table.resp td{font-size:14.5px}
+    table.resp td::before{font-size:11px}
+  }
+</style>
+</head>
+<body>
+<div id="syncbar"></div>
+<header>
+  <div class="logo">
+    <img class="wyd-logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAABgCAYAAACE7kkqAAA650lEQVR42u29eXxdR3n//35mzrlXu2wn3rJ6d3AgAStOAgRkQxybbKwyKWUplL20LGX5stVWUyhhh7ZAaCk7tFbTUBKC7STYCoHGiU1wmiiJ4zWb90W6Wu4958w8vz/OudKVLNlOYjvOD83rdV/SSzr3nDMzn3nmeT7PMsJzoCktFtq8gD6Nr0v20fqJU5cZY65Q9RNB6gX2ACtw7nude7ZvACyQMNpO+ibPtRdWMAL+KXzFAq5h0tSvGxN8EPWopncSEbJff965c/NbM9Aantr9R9uz0Mxz4SW7Z89btK6pKVSQpwnaeUbMB9W7RFU9KXRVVRXVBPTVYyZPv6txwtRLM9CaUWiMAvcZSVcAj37hnG75iYB2zZz3ck0BeRStubyjvAsRzTQNU6E+CBAANSBNGLOycfL0uaPgHQXuM2vNzQZAVG6tzVUv6Zo5711q9MPds+e9EUBbWuzh1aD2BJoDQZpRFZCR+quq3olgfEJVBahH20nagpP67SZMSFVQ0bXexaqi38iL7Cp5PQX4GW1z9Aj6u4497fHJ3unZOrJOr4ADXIJf0L1n6+/LKkb5HqMwGTXOnpYh1nvuBWf6RDYKUmUFVDVJRF9U/9C6+w9jrFnANU6e3gSsQ1WH769GxgY559xS0L3eyX3de7bceYLAawe/UzPQ7ocYh8KhqlF5sR3mXv3Nj2BsDnffpzA1/fd+Vha2OclXlVeQmgfWPeZV768yopFqscoGAV7eWqlOjNxBrZbBgz1oAsQEOe/c3V3jqr4gKi8JQvObxslT3tUwadon6ybPOvU4L3CXMRnZpz0ZBmQ6+BqSYUA7zL36P/4wO03yND8u+2iGITsqcYeObnNzIO3tSffsC75Sa8OPFJIkqjImV/RuW70/9RzZtKKUsQ06nMQdM2lKM2LXpGzCoIXqQUD9tZ319h/ZtKlUN2nm8wLx96v3ToWdgjzcufMti6BVjoN0sfUTpy02olUgiqCoMUb1oQO7Nj+Qvas/5ZTZ9UkYLwQVEAUVFS107di2qlIlGjNpSrMSnJqudRVEPGqM4rd37dyyrmLnEICGM+aMlSSen+Evw4FoeT2PAJf0/yLeoHtKidvcu2f7zgoheMJoxOBkB25ZzxVoV9WPgNo+db7W2imdfs/LgVtpaTG0tbnhFqWKGSfpnFWCzouI8V43dO3auoxdAM1B9872BxsnTW0Ta9+I96eLsWc2TvrxtZ07+XSF6nCsdjov6N8bG85Vn863WIN3ya+AK5kxI2TTplIURPMDG95QviYlBB0148+enIFGmTy5xnvzC2NlDFqxNo2gns66ybNmdO/YuL/i2Y6476smCN+m3gxjGRydrhBY09U4efrvFL7RtWPzyhMJ3pOf8mlrS4fRB+t7fNJnRayoOCtGrbVLDkNJZHQBEzMIV0yHekRA9N50DJqDTLcUJ36Zel8CVL1LgE+MmTD1vAy0x2i8mg2gIvxE1TtVV1L1sXeJU+UFzJiRZ9OmOMWeXJxe44uq3qlPIhHRQMwLyndrpOZ5ItKQ8tTe9X98UjLGNBqNPwZ45swJAdd42owXiZE3e5fEqj7p/3jf553vG3SP9P1i9S5S7yJVF6d/UxWkQZBXGWRFw8RpX8lAa0/ETn7SA7dfz33kridVebjKpHMeeSeqesWO886rlbY2pyMP1oTDiI2NFRLCQ4vp3rH9IVX9kRhjURIxxnqRjx1b1ardA4jndvVeQHLZ7mdE5Mwxnck55fdS9GIUC4QZKAwigjEXDnB5/iIxYjJRaQc+klPvvSB/Nfa06WfS0ZHuGM5fJxibzX/5uYEi1wraC2IrdFeLmFCMzYmxOcSE2f+0TCOq+sRa+5H6iVNbj+0Cfy5LXGBNc7OVVHG712RUbFG9r7V2ck0x93IAWlrMCFrZxJFxKzuHiHcBjMIvU21QrXpF0MXjxs1oqGAZnmnzgBzcvbUDZaOIZBu0OjEi3pqLARrPOmusKOfpgOMk1RVSkvDCgT7KS4esK63QZ70YU+u8LgNc/cSpV4oxC1W9S4GpTow13vsfEZauR2Rsha6giKBet6v627z37ajfhIgg/Zy4Baz3LjEin6mdOP3cEwHe5wRw5w+I3z9WANIbETXC6wDW7N49BFDtWRgCE9N5kIr/p5NvjBzIrs3+PsMC3hhzWoaB1OYTOdWZePqxlbrNaUCP6K3pq6mv6NvLATFxcC7GnDqEyhNFQXkhc+bk0jnUeekl/fNZ6UCx6r0KvHXMhKnnGZFPDaazjKh3+yTvPhRoVc2Qpe1EBDH6g86dWxZ27doyv3Nn9bk4vxDVTdmC8+VxEmNMIP7dFerQnzZwac8MNJGHvHoQDCIm9k4UFj96xsXVC9rbkyHqQnlyTh1eA1HwdFZsrQKbSrUTp01A9WOqqpmnLZU6gbXHWF3QFDny62xhGRCDKoheBGjimZsKNnUVfTKoIsIZjfu6Tx93+ozTEJmWqfCSqRcFhZ4hZlbgjawALlL1ZQ7XixGjoh/sfPTRA7EmtZULqII0zBbInBx0xJ27t97mxF2laM+AOScGVVVkQWZLu1Hgkhpo3rtHe733JgWUFFV9jbFnjK31F6fXtQyhuwDRU7L5k0EahCrOJDuyba0EMGbi1CsDkTtEZEYFEETVd3kJtg2677FRFwhK/F6921d2R2fCdWrdpBnjBZ1bwWBV9iHd3gnmxM6/QIwtMx5OjEWQX+J5lxgrleqNIJMr5tyJMYF37hddO7b+FBCThPFhSAQP47O+N4WZLXC7iOmXuqqIKGc0nnXWGIa8+J8ocPslx16gYMu7vqq3YhD06nR36lcXBGDcuBkNokwcxt2rIoL15kP1k6a9qnHStM83TJq2HmNuQpidcb6pfihGQf7QvWPj3gqj5Fj1yR44sKVThd+m868KOBFjjLjLBJmTPc2q0quqHSljXZaKOs+ovrg8GGXVVuHOrt1bfu5d0i5iggEar59ZUUREvT8Q55K/eor9UqjLJL9sHszYKAp563K1x9tPMJxOdNK2+t6wR9FuMzD4JvEehcXrmppC2vu3p3Q4Q38WIuMrt9Fyv1UVMeY9VswtYswnjciLVNUzyFGhiiCK+d7xWejNkmpA5pYKMJd12HcC01U9kiqTj4nwPUEo09IGLkXk0rR/IiCBeh/h5DZA1PFuxfdUAFMqeWzBf7jvsceepKnJPq0dQ3TsMNawK8UuHiJwjhtwlQH33VF7fugPEWwOBnTF5uB4LAJVhI/N8yBFM2A5maJ6BGbNcnYm2myziDHJejcmtR+G395V1at6PxCni6kAbSxiA3VufeH0xv/M/n6MsyPaU2+cM7er9xFI0K/DIvMRxqXSUgDd7A03pwyDBKoeRC4GLiwL4MzQv7drz+ZN0GwLe7duxHOtmP7tnEyiW3Xu1wd3bvshYFm/3h0ZJ80BbAugKcz0VwPSnKk2/bYAyN6e3dUHTggdNnny5Jr60047haOPQzXZ9pO5Qdsr/NftSXkbfOZgVVSXBqxeakVQ+eA/ldTr0GtcrbVGtkanibQn0tbmljancbheXLceKm2H9sP0A6Z/EWssYkPF7/GWN7F+fXycxt8D0rn7kS0oG7JF5g5dsoIK9xee3LoR7/fQT5/1G5blpY1CKr1nPGFTae7/N5N7UnmdiKzNhM4RhYxAbzqv24uwPga0YeK0LxoxUyt2KC8iivIH6Iiy9zpuEjcA6PFVP7HWvqx+4rS/KOza8isO794MgKRh4rRrRPS1OVf9l5EtvRt4BWgC8ts4iX/Wu/fRHRWA0acO2uVWRMqBI6h+pdp17Lk6essd46NCpNiMzzQixV6n4YcmLtNl75hR+O2TNzS8fMUeXd0cnPqGnZuTINqbcpPIYRZlZnwoiLEiNlTv70tU3tSza8tGjqsrs9mmoNAViJmH+iHkiEiqvsq9qXLOfQZ5pabWf4VwEJst0hS4uZwC6oVqM3yH80cxL4IqCheOmTT9rao+ADlFhauNmEs09UObCv1ZVPj3E6E2BmMmTD1PRa5CNTDCDWMmTL3w4O6t940A3hS0k6a9zxj7Le/dwcgWbxNjL6JMNQqvDsPgE42Tp3+mc8fm71bonHq0UhaWGZElTp/8xnhXb64RX2r2vclcW5efivODvABixETFmIbG8KVgX1o7q+Ejuu2qRTLlpq2qdI87Y/q3wXzWO+fShcVgUIBFRASxacyN34G6b9dI31d27NzRy3H3v2e0mDUrrOpnhwS7a2qYeefF3JfRIXdheGU6UFKhb4rB+01du8ZtAISOjnJwgz+CwXs43KaLQeRKRK4UtekUK1SA1oMmaZRd8ovCrq23VOzIxw+4TmSulVSpF2PyKvx8/Pg5F+3Z09EzZNIskDROPvs1gvmWepcINCBykfok6Sf4U6tnvIhc3zhx6qttbP9s//5N3UczWLq8X8r65OB33u1DWm2NmUSkEMZED+33ycHISE2QOoL74Sf07Yt82NPngryd6UywWnde+ZciN98Om//ulNOnTfYi75ShCRCaLRTVJzzcLV5/qWH0y87HH99/cECVON5BIx6gECZ/aCjaR0XkdNB44NliwG/trmNzRmndlW3PvgIcsYiEKrIy3cqbg/KCEEHRSrUuW/cyIqArY5CzOfVe/ZAYYcGkKBYjYnPq3W1hknvrMWZeRgauMXKfqiaI5FR9ItbOiaT4c+BqBudmubpJZ80B+2PFDxgyqZUQDOb21av3sdjg8lh1DnDXEdQPdPXSQBYsSfTgt8b6sObbpsa+kZ5u/P7uBBcJY63o/x0wRA5qDw1qk0CMMWKSQuyDGnM2gbnN7V38HdMd/ZNM+c27zpo+/Tudvf5l4jnTowbDbrzZLNZszMXhpj17OrqHGJ6eExPppNAcsL29KBOn3WGsfbN6ZzPMWDEG7/RhNm0qpTLQbPAeI8bmKuBhQfDwq0opnnLfEgbGVOrC2T2TmkN3O2+MmPwwJoEdrL30zzMe3Ypz3+ncteUrnMCskUDVX2wwkupMEqh3iRh7ZcOkaf/WtXPLX5ZX7xlnnFFdSIL/EEzdgJ97WIrIAWJskPfe3VxoMPey+/BbR6rPLkl0/09e4HOmzVTb2f7ggQSfWBEJsAbtTXBrdiI5O+ywSJ3NVFQxSSnxkBCMCd7rNH5b96aXvq9uxu9+aIT1fsQhbbFZrII73tvcoW1C+a2+771rTMdX0jgCr1aVn5XH+sCTm59onDj1O+rldB0IEhdR7c3FuTsrjT4AY9wO7+WmTCc2oE4c1qj8seLZCpCQdAdqfpEF2YyUMeJR2QeyBZF7qn3373bt2tXzVFXCZ9qkcdK0nYhMHOIPT8TYAJd8/eCurR8GaJw47V/EmvenoX4yUhxvSrWgitdvd1a5v2X79uLhOqSa1Tc4uHyhrzLLjfVjfKGQiEkCNIYkgkYhuW07xfe2I7XhIDUBK+jBhNznzyR8QwN6sAgmASLUJ4kxcWDqlZ6dfW+rm3nXj1taWqra7p3kOb1L6M471n83qXi30Ryzp9csJziNRxonTRspkicWY0Pv3WdF5Xdi5DdDJO2hoDXGqvd3evUfLezatvZIYFBdbqHF0XXji6kK78AVA1/qdSLOQgwuAuNAYvr+bAW+4wAM0W8RIFLy/zYV05SH7hJIClw0QX3kJHQSx0nXgT1m1ulz79xTSWrSdH3I5KZG9kY93PWSvkrnGi1tht3j08XcPt8NZAgcV3pSAFqAtkNYj0FAGUlf1kPZLMzITMqhIGzJfmk7LEPWXFZJnpW8s0DRm4yYq9OgkkEdDNU7L8i1oMVh/n+IpPXOf6Vr15aPMxBQfMROpdL2xo+RCwPf2R2LMSHqwKVpkNKQo/iJ3+M27EXG5NO/V05JrMj4EDk7D6XBTJJXQdXanC8m9rTSmMlV0Re1eXVrvsFdUoxlHsq5GJlC0h0zJnk90AFLDbR6EKXtxKkMCkJzs1kDzG9v9wK6FGRZc7NhwgRoa6tMT3Lpd1pshZubI3Ln6X2Hd8aU7zVwjSynxbQ07xba53uhdcj32ivfO6h4hhupVFZ2rR3ufQb1ZcIElUMzWgbjpmHitGuMyM8UX1YBZJiVeTiSOhExgXr/8c5dW75UITXckXnaJU47b76C2tzNvqfgRGKLi8BHSK2gPiK69k6iHz2ANOQGS9qymtCZEFw+jvxXz0K7+sAkeO9QjcnleyHo47EnG/nve87RG9fNkTs2Ti2Sq61SBHymJSR9BxDZjmouWxAxSDcqezF2M0bWUpu7ibaXFPu9sscUtC1WaHNHAe6nWn6KY3VPBbMMaD1JylMFAmem27wNU2pOy9SWVIBwJPAmYkzgvV/WtWvLl5aefXbVVaee6prq6pT29hEHJPXdPJAK8cIt1+E96pyIKNSESGhxf3iU6At3kvz+caQxfyhoK6RusHBM2cjFOUM+X4Kwjz8+MpF/WTmX/7p7Dgf3NwjWQ3VURVRwaXKipPHpJhiLCccOVnXL9UMEgiro2ruWpnUvY1qbP5aSOAVOm9s8ranxjLy92ikLvPrpitQJ9AbIQ4jekn/onl9k2SBpCgho9+x5i6qMmd3nnEPEHEZK+Gprbbf3vx/z8D3rymCtXDB9s+a9EiOvUtXzHDreiDhRdlpYl4i5SR5au74S6OWfnbMvmF1r7KJe55L6ILAHnd409uG12yoTWMu/H3zBC8bauPrP8V6rrbWR4w81G9feCXBw1rwlNcJEB0SqBxo3rvvJYYHbuWvLl8aMn7JKMZ8E3iAmCFJviVamackIOm2g3i3v2rm1FZDW7duLrdu3Dx6zbBtJt8DMel42x9LamrjdF7zLnlp/Ln0FZ8fWWHyEu+9R4h/eQ/Krh9FigoypAueH1wZ7HfacWuzLG3EFh7FCvq6PTdsb+fx/v5Kf3HkucW8eqksEDT14D15FEbGDaZ1ESZIhK0MUUUWNQxOP6k2svyBm/bGXdgdmznttjZWv58ScleoB0r+EApFLEN5Zmn3RXXt99A555N4HtakpZP362KMfsDa8si7lU4fkg1aqTIqxIdb3/T2wjuZmo+0TRGhznTPmXlwVBF8KRC4xIjhVXHafwAhGzBXeu6Wlcy76rx6JPioP3rt9eYVaAbzU2vAbtQiYAJtEjwHbhiSwCqCmr3pyXc7+E2IgCIm1eD1wZ8Y3t4ZB7pwQJY7jHQo/zXo0XAY3ASAH92zbAFwz5vQp56tjicCLgbOA6SMZASJivPPbg9i+C2DztKaGM3LmNU5lvDXymDfJuuoH1m+W9vZDA1NacQQGHX/KpyFWt7db/B+2kNzyf7g7NqNdJaQhj9TlhgdtmVmPPOHbJ+Nqc4SlTiLv+eJ/XMQXftFEV2ct1BaxDb14b0icOcwiFEFGqD1gTIArPokEp/CqOz5FXPoJty18dCBd/GmCtqXFSlubOzBr3ivrrPlvVehKkqTO2sAIJAqhCEX1RE7jhsBe7Alv3z+t6WLWr38860knSZx0e5eoEFaLtcNui6rkUVzZ6fBEtRXaSgdnXnBNtbU/CkXCLudiI4R1xlIOG1WUgoudKjQE4RtwuUsOzrrg6jEb2+7RPXNy6TVSIomTHu+jetWcqkQj9jnQpJAkMaivBytId4Vv+UCSxIlL4732H02sQr/RdfCJbRuADRn99XGx5roR6C8FjBXed2D/pq6NMy5sGG/0Nzkbzs0KIdITm6jnnHn/51X/gJoHjfCYiutKrCWMqdFpE86Lr11+evLgE/iNO4zf2ZXxsXlkbHUK2JHUg0DQAzHBK0+ByycQ0skftp/K+65/CXc/cDrUlggaenHO4Jx5BgJRBE0Usadh8x8mqAO3+xXApbS0mWekMmTlo4zQahEKPomqjc31ef8Lj/+pCJ2xt9NAP1Rl5JzOJOlpDILJDv0HgbdmxIfFZHaJii+qv1OE2A+ti6C4vHcW1UcURDatKPXOuugSa/hprCp93kcN1uZ6vDtQcG4FwgMCoShzrZjFeSthl4tLdcZOynm5uWfmxXPbOs7cCR2IqmTv4BEJwMthVBZBJEDxiFh8ZS69WBEJMiXNHg1wGezWbTLM6DQU3DsZCFmrfLoTY613/obuXVt+rSATA315vQnmFuIoKuvFRiRXJabJGNNUVmwVQX2KeLbtoXvDNtQapCpEGqszBcSPLGUzg4xeh5xWjf3UTMLaIj+4aRbv/+7F9BVDgsZe3GAJe8ToCFQ8ku2PmqYFDexQWZBL0gdBDaAbjgWDILT6PbNfUm+IZ/V5p7XW5nq929Dw8LrXVl67c+pFv2jI+Y2NYa4BVUKRt+ydef4nT31kwxNkRRQkVX3273AHFs3KPGyHe/bGGTPysfh/zYkxRe/jBhvkit7/t3j7Nw2P3PVE5fWlmReeH6HfrzP2Rd3OlRqCcEKB+KtLaHvjs2qcHfqn9XFjYfoCMWbmMNVfFETU+5I6PunKmpXSSJrIZNJVl0Ze9HinaIZC6bd4sqWHMrY2kDTJ+fBgrQRtyUPOEHz5+eTOsXz+X2fx6R/PheoYWxMdFWAzP6FTRDChIcjZfmeRT8BHoC5Tr1CgF7FPUtp/C6VwKajQ9syta29DxUVOMJKoqhVpKEy9aGL91rW7+gd769pdB2c2vTfv/XndPomNYqqpHtDDK0TWTN9YRZaGNFxb19QUyvr1cZcdc2W9Dc7pSuKozga5Hu/vqHv47tdX2iT9N21v3/DkjBcuaiS3Pm/MGT0uSQLk9YXnzTu3/sF7HkCNOQmA2yzQDqKvR4yi3g+WuOrE2MA7/+PC3i2PLJszJ0dHR4T3j0QiRrO0T/oRKlkwxjBUQFm6Hn1UBfTEUB0QfG0uVc3VXPe9s/n0D19EUF9K/bT+8KGl1ni8Cj7KQVWVhQhcvIuk737gvpTH1W2I7CaJi4T5AG89Yb5Ad2kX7a88JoHkmdFhpKO9uzB73uZqYyZ0ucRVGzvV5fTuvtkX/FCN3NYp9n467to/5pH1Pwd+zqFaulZuwz0JNU80NcUmjsWHYf//TgO27a3z2+qyQHjldeV9O1H1iXcf6wd2e/ug2GOdMycnHX/cc3B20+dqTO47kYuTWhtW9STuCuABjJ4MwE3ryaKPLRymnqyCWPU+Vuu/DEhHR0daiKOBewsF/0iVsTOKaYWLY9cZky4B3V/ETKsn+OIF5F+SZ/lN4/h/Pzo/A62MZFD3A9Z5g+uugcDrOVOecPsK9d/aU6i7kSrzR/5nwcGjepcWtamkPQY8bkuL0NaGqnwZkRutiOnzPs4ZOavKhJ9NvP+s925v3+wLOwyypuT5j4ZH1j54/5w5uXPHj/eVRq+qJioyVqv4Q0NBvJIXKVIu0eox1oyr6r1navs9r8lUi+clXiVvJCyq29z4yLT1ynqR4QLmOzoSBekzuRXdSRIhkkuDa/z5ZSr92QauAfy4SU/McjBjGE9ZOSv0lsKT2x4GbBs40qJ0cc85F3w5NOb6YuKT4aXsUxVLkumzMVpyBFeeTfDp8wlOhy0PCO/87gsxeZe65kaieEUxorjeaggTXvvS9freV/xWXj6zg6opDy4T4YAB/NKlhjXz03eesEeZ06KwjPQDtC4DWpU2OWb8bVZ9x8jGu3/ROeuCD1cb84+htVWx93S5REXVGZFTc0ZebsS8HPEf7Zo97/MNHfd8TpuawmGkuAmMmXQIZ0lqpgh+EsDGGYvzsK/RoeREiLw8LqTvwkgVLUH3xu5AzuoBi0zMwD8WTng00nDAbTbQ7mPcXGusUe+TQ4CtCka/XblZSXt7oiw1bQ+1fm/RrHl/1hAE8wtJEokQ8nRyz0zGSRZjtDfBzBxL/gPnYa8+E18sIT09vP9HL6TQmcPWxzg3/COMUbwzuL48lzU9yLKWFbx45sNK3gmxPApvjpqbpwfz5+NbW1s9h7g0U97uuLt658zJSce6rxdmN92uXt7q1C+0MKvG2moRoeg9kUtiK9TUB+E/FGZd0CPr1319pECH4QISKhWMmS+qT7rv2xcNlJ/UukMvPbTljMuBVFcMUin7ljyVWR7iyZJjIXEzdV/OH+YRHhGj6jd3jatZzY5BTATQSgv47iR4Y59Jbq0PgvO6XXL0klWyn86j3RE4j5k2jtyScwiXzEROsUT7e8nVlbjp9xNZedeEI4DW40shNbmEr7zvRt572e8giUmiGg0Cpzet6L3/6jffVWPNT3ra25+97GYBT0dHBFD/8Pr/Az4GoOdecGYx9ud60WYRuabWmik9zrmSSwSRTx84+/wfjN2+4WD/BIlYhc4+r9cYfHemvvanosfijKjpVDDS1ua6Zs17LGfM7B7v1CKzC8+/aCL3L96jtB5yOMwamq3S7ruF51cb29DrfIRIKOiWbLHEZSI2ExiNCoYhlYUUpMebKmuRWMvnHmnxGAC3HHysMw8tWaRexBhVWZ4OdHOQJUX2T4CCqd/yv7sPnH1+M9Xy1RBZEuPzitgKn3Gac5AyYyl3lzjRYgyJRxqrsS85m/Cq2QSXno2Mz6GFHvRghLXgE8u1N549YOuPJGmLOc44pcANH13Ohc/bROlgHhNaCr1F+7b3FnTVne7qMZO5N3ZTm3p2b93NCQ5nLHvMDp4zt6lRcvN61LlaglxR/a+qHl78qDzQ+hjwGLCi85x5X8bpimpjm/q883ljTjXV+XOAu6RMh2UxcgdKu9dMTcNIh20bZyzOs2lFyRhdjchCj5bqg7CuK4o/ILR+VufMyWnHuW4ZbboMBs7gaMcXVP7WZMOkqoLX21PppVsj9WUaEa86X+Bn+kR1qGWhPmNxKJtWlLqMvrjWBCSa7uaisnmEARKamgKtq1O6u0Xr6vRwEtdnusvkQ8W42LS6jvzXYJAPlh5LwWSS4B0951z0L1blVhEZG6uqBQlEJBTTv7cU4xjXWI29eBr2xVOxl5yNmT0OyXm0uwc90AeiOBGCGsfq9WO5p6MRU5MMyyAYUXwUMHlcN7cv/TmzzthB34F6wqBIop5rPtDNre2JjDtVEq/2dGuTvwQ+P3QhHvfW3Gxob/fWm4vJh/9clShYSxTHL6ym9V3lwBtmFAJ5aMW+g7MuaK824QVF751BbKxaPdxtp2zffths5FmbVpTSxZ3/aa+L/s4iYY9LXJXYT3TNvnCDdNz9X9AxoCSlLl26Z134dzXWXNntXFxtbNjtkkfqdfztS8H05qMNUsw9mTNmUq9LXE7Mm/bPvPBf5JEVA3z3phWlg2ddMjYg+mjJOwXCPpe4nOGO4fgmFU3kCJnVQeX1mcBvHGI0Z0WQ/YNdu7Zu4DCRX61Z4AbAvmT7ripLr1HGCohH+2Jlf6z6uARmky/0rc1/5S1X5Bace5lpwBNiNeqFvl60J0prJloD6rLYfeUHd0xAEoMRdwiJKoB4IWc9N3zkZmaduYdiVzVWSgQNwnVf7OHWNRHjJxqiGBHxKipXpcBtP7ERTxkgbMgve6K+Lwli1JfIi3lH7zkXPu6NXk9H2y42tSR9sy58BcKfF53zVrAl9aUo0U2Z5Nb+n6pVXbMveFtB6SnvZxXqmK82Yntga8NDd98tHb97tHP2vOsagnBpIYlKMT6XF2nrmTXv373IT2LrNktibU78CwR5T7Uxlxd86oMMjBG8flw2rShtnDEjP/m++3oKsy78ft4Gn+5KolKVmNpq41d2z7rw04l3a3JhLlHnXiRSas0bM72QuKgxDHOdLr5lzEPrNpZd3+U5TFKH0Lju2fP+ohz87Y6o486ZE+r+Yn6I3PaIMQgr03scXjplFqqcuonH9864cE5djjMShHorXeTcflm/vre8TPQNlz8I+xfRuVdVkzQAXCQFLC6bESEMla59OVZuGINWueGlrfG4QjVL33onLz5/O8X9NQSmhA3hyS0J//yTXurHGOL0zY2mi/RMzjijmscf7zuR6oKAzybssc5Z877eEIafLMRxHOG13gTLup37cGHWvEeFrfnAmFkKxOpLDUEu3x3H3ztl87rHsjulSZBKoiJ19cZ+b6RYBRsEmCi6QeAN2tQUtq2fcu2rZm87vz7IvaYQR66kqvU2eEei+g510ieiptrYPAhdLomsSK42CG1XEn2uceO6Xygtlk1tkYLZ5/miJPHrG2x4TmcSRzljJtYa82/daJT42NdZW5Wo0O1dqS6w+aJ3hSqRDytIRbS6R/CJVycik2uN/f7RG2fV1SoUh0gfMRmAVo2kJgxHsAOcuunuLsp7T4WSzsubLRMmGOTc2zl40//SWP9i7TzoxIgdCh3vwVR71m6oY9fuPKbK4Ye44o0orhQydcpePnrFBpJCFYFNcE4JagzLb+lj5y7HKacYkqTS06v1tXGuvgf6Trhl1tbmlaWGjXyme/avxtcH4TtRpeAdFmkMjbwAlEiVvBiqbS7fl8S/7g16/rZ8LoZAHmNMzvucFSHW4TeORJVAPSqZA6KuTlto8zzc3NI3u/dr1dZ+IEDo8Q4PXpBqgG7vfCDGNARhLvK+tztJPtO4cd3XKsMhUyF1d9eBWRdeXvLJjY1BeH7kHV0+8UYkJwgF73woxjTYMB95tytO/BsbNq3bqP1B+yn6jBhTJWoEIVLfTw/oYYCb/m/9+lgnTi0a6WeVFTBefacE0dohcQ1H5ZNnaLE5UNrbEy3Xu+oyf+GLpd+bfDjGR8khzou0xrZyx4MNSGwwNQ7vhjHISgHvfeVDVDf0UeoMCIxijUCf97es6TNBKMMV0BT17lnx/KSLu1UVpP5h3tUz68JfWeH9FrnQCo0VhWf7EvT+xMX/XvPwPdcDWnbLquhW7/yDJdVE8PYwsS3Oew0UTWNO58/3tLcjtCc8zF/3zrroP9X49xlkgYHJucwuL6ZG15bI+VsKPvrWqY/c+2A5fnioYS4b7976x/POe+msEh+yYt5kkdl5MYhAyXsjyvaid/+zN+FLZ25a9/hyWqzQWllJ/iHnXa6o6gRvjmL8BuvFjZOmrQVelIHaixjr1a3p2rl1Ace4zoCuXh3IggWJdt7wVhoafkjXnkhxubSsQAwa432CrS6yaOkMVq0dh60dbJhlJ5QQBp4HvnADM07bQ1xShAhrEzo7I15w+aMc7FKCoN9ZkUV+6X4No5ldjz++n2cxUbIyC0Gff9HE3lJytrc0qg/6QuHx6ofXbhscoHNs3lNB2mgxS8rSc/ZL6iN1UyP8+EC8Ex/s2hFVbZ26vb1YNhhHytQY1AdabGn2EzOU0mTUmipjd9Otm+Xxu/qGXnsseNwy17E/TT1mdqrfYkXl95VOimM2YwsWOF29OqBh/o9813+92TSMW6gHdyWgViQ1Ea1Rom7Lxh1VaYacyiHeMV8KeN7Z+5g2qQsXW4wkOKcuaDR244bovl173PPq6mzofWWJeESVQtfjDd1DxsAMrqfVrsfbQST9Rm2byv1rd0F6DtAgYGRGjBzDxZXeq80tp8W2APJwWyGL2Tjk2bS16eHSi8pndaxpbrbS3pbwMA8DDw9zH38s0o+GJtq5hklTvw9yiiBXgY9FbIhLXn1w97ZfcmyPTCr72dNfDrQ1UsW/U21eR3c3Pi4mXhMb5CJ5dKdh1oefR6lk0moDFVMXWCXpyvO2xQ/yg7+5jVKXdUJJc2MICrt7ds5dvPXvdxxw3wwDsaoVhZHFWFW/tnPnlosZiP8cqW8n7BikdOtsMQNpvm16uImukMBy2GE+Ckk9oNq1ZPdq03717in34anf5yj7MrznTJXtAvuzzKZA1UWI/7+jcQs+vZAESWsrjFvSCbw+6fzxO2zOftXU1TXKwS4wmjyxPzSlPmsk1GHiEtJ+nn/mPufVS74mb6kBKN771g/t+MOju921dTV45wf1NYWw55HKxThx4sTaInXzEP8iUTlTjXR7l9xS2L39rhMD3qVGmuebNF7iAaXlXGH3+w0T9ghtS9zhDGFalqep9PPXeDrOlfT3+Z7WNOtheNCo0LzGlp8n5e9N2KOHPG/pUkPHMjls0nr6IilV0LbEHfnaEfpyFDiToVKlYfKURaiZYkS+k4LEb+7cedY5GQV23PTAgWJ3rb5v1/XTq+rth1wSv8XW07jyzioWf+osbJ0/JBLSiOJLIfd8+TYumLuN6Il4ha12P7LjzC+k6u6lp0zIfyKJ4yFZHJqIsYE6/4nOXVu+OHbytLO8yvuBPxORswa55hRU3Uc6d2792vHYcQbme7kdCZwpcNSUQXgI+A4XrTbSfY/0vENOmzy52lDPme3asW1lw6Tpi/uloWdjBtrjKnHKBZiztPXNwF/v2PHtr0yqL13+2wcalxCGzarFQfHBAnhvNF8bu8Zcz830uh/lz1h+Y/n/406f1uDccPk/YlH1orqiftLUN3uVb4gx47KC5H6gVD2aOvzMV8ecPuU3WWrTsR+HFJSOS289izC8BvUXAWOAbrD344q/pFXWHha0r1r9GuAqvD8biDB2A5r8nLZL72Mw7TTwvMW3jIfqa0AvAU5FfRGxD2HkZm6R1YMWzCtum0N11QySPocfweoXoxgRPEVKdjXtC5ITAdzKyISDapT0yDd58LgYZiMCeIlTXWrgXBFZsg34FheuNkzMN/uoOCgjQxWPDU0Ulx6d9YKvvzbd0ZYatq3JLftBe6lxshaMGaZOhIh41W0IH7Bi36UoWcXJrMr6oOD5GDGhd+Y1wIZjPg4tyy2t4lj46/cQ5K7DVjXi4/SgHTFgwqsx8ikW3fZdivav0u2/vB2I8spbTyG0P8FWLU71qMyJY8JX4aKPsnBlK7cu+od+CVsG4qW/fh1S+8/Y/GQ0STM/TAgmuBz1H2Hx6hvIhW9nzZo+wBPIuwnqP4hPwNpDN+7yLmVCKHUWiKtOBwrPNKn0aIGb5SUnB/ASgw0RHjnhHKek0qFl6fLc8mUP+OCK+DSnI+jzJkBdtFV1qfnu+tPsey54TwzNSesP0caJsm9Y9UgVQc8QY96V1XmVw9RDK5dPHXPc1IPFK99MMOY7JN0QdUbYfA4Tpic3RV3pdl516rvRPZ5WeR8tyy1zWpSb1wXYAzcSNryM0v4IMTmCmvR7cWcCxlB9yrUsXNlD26Kv0bI8R6tELFz5CsLqG9L7d0bYXA6TS6c/KnhQT9Wpr6dvX575C1+dFq1xDh+Bjw8tuase1KdZ9Wm+Yw+1PcdVyA0r8vOR71Loy4q2bD5aj9kxdy6tGe9FWhOXkB8eUqqIBWGLSKt/z9/O0iEK8GHOIpCwIqfuyOXkRYrHtncqtC3xXHprI2q+QlJ0eBcTVOVwpTXEhc/jev8z7Z8RSvtjbO69LLr9XNqWOFrFc8qB95If8zJK+0vYfA7YTdz9TVzxP5EwAFGirgQT/iMLV06lrSWmZXkOI99Io5dKEUFVDh+tJ+7+R+LeHyCmhAksxX0Rufor+f2qRdkLd6HuCVS345Mn8MkTaPYTvw+TiWGbN4j5I7de1stSNcdLRzbDSdy9tXJAkF5VlzgvG56qx+w4EJ3hyDahAGwd/Lf2si6x79AQzSMv3OGe4VVLx7RPzWvS7MxAFhI2TMCXhFxDiI/bWHXZAlYt+jQrL7sGdZ8mqDGo99hqwF2afn91FaJ/Q9LrERuibi9qX8qqyz7Iykuvwbu/Iai2+NgT1uYReR+IUhh7Ibbm+bg+IazP4aI7KYYXs+qyT7Fq4dtRfScml27vIopI+rzGui9CMItccQ654ixyxVkUw3MwyXRgDba6/5A2PN8EUTrajlusczAst7R9e1EnTSsCd/Ts2rL7uFrTz7g5UPfocAtQVR/PFvwzdOsqBuk9Lq/v/RRUDyIS4eM8+G+CClfeVE2hPkKjlfjoCwNKpIxPVYfkRZhwBq4Uk2sIibr+mVWXbeLi5dWc2RLRJv/EZSvfi83PwRUVuBz4OPgzEHsQJALJI+5faL804cpf1lCoj5DiapLeOFVWvSDmFADmvLg0LKtx5W/PIo6uIOn12KqAuPtBotyt6Y4ixw0zI06oGPM6K/L2Z13aHglPaUzyk0CaL1bxvt6EW1R911HSeP7wjzoq4B79eXFliztX/BahzCBhDqXidPqCu1LJWB/RviBBdC4mT/lwELTsVfNzUwkMuCKoroClhjOJ2L0mfQ+Rldgq8CUQmcJVt00EdyMSziRhDkUznbNOuQGQ/uepPJ+gJkxryBlA03yXm79rMx9C+mm6Ps17i4vvI6yrQn2MzQuYb9O+IMl2FE6UxO2XVp1Pbrr3EKPt2QOojqB4GlwEVvemUqGlksCW7h0b9zZOmtYhYi7KjLAR68qKiNHDpAoLvvcoQPvUx+nmq3uB3kP03/nLPPW/rCEO/h++pBhribuLuHK5fHNm9tQAF/Vi/KPQ6mlbamien7nv5aFsKBLE1hK701hx+S4qay/cXqbV1pSZwmUZSyC4EqhNkweufLdjfVlfVWH9uxOaZ9Wh8dtIehVjc8SF/eB+mi7M+c/aWb6Gk+fI1NIw1U9Tvg5fxLmDQJaN269E2gzBv05TLkZEZSLGGFX9FcrDhx7ol5EKRvoOp2SPHz+ntmHStJuqz5x92jDOnSM5jAZ/mtdYWls9cc2/EtbOxJVKhA0B6HXcvnBL9r2GLHhPgF5ckIF/WWU/O8slsTAWEm3I9ONgsPT8bkD7goTLVn2RsP4lxD0lco0hvvh9Vr1ifUbZ+cH6uShV7g3kGibj44igVkB/yqrF+9P7H1/HhTnC1nmyqAjFw7x+D2HSfeikpVyraPBj9T7m0Ew1BY0yD9qqGulbolA9zLm/goJo+aip9mGBmwTFccbYK8Mkelvlwjmq/QQpf1JQtC9IWLTqq4T1byLqKpJrrCI6uJpi8A80rQvLZPuRl4QOSfLNNtgJewae2fTdgPXviblsxUfJ1X+MqFAiV5snKnSQr/0gS9XQ1jIYB+1rPKig7gP4GJCApDfB5r4NpGGTx7k9Nw6hNtI7TIX48hGcvXTv6Rth4dnOXRu3Al8x1tqU1dfyKZgiJsipc+01pu+1UdRgER0z4mbv/Qjn0zYbQNT5F4qIx8vcp00fNq9OQXvZbZ8n1/hh4s4iYW0VSe9DJLTQPt8xbUuW2Ws6M9+hIlSTC4bJQzMN/aWOfQLWFwapVM2rM9De+tfkGr9E1B1hc3lcsguNX80vLymktSUqpGfLcgutysJVLyOobsL1xYS1Fp/cyi3zHxzZNf2nCFyv3cNr4gKqvcz/i2iE3TkF784zP+tc8gMRG4ixgYixwD717gudVW7xjh07evukr46RYlGg8sCkIQ9JT61RMS3ZeI5/WgZt8+p0u150ayu5+k9S6iphq6twyXa09CpuX7gvO5Miq8Xmy0xKgglr0fiM/nMrynqoMCsbowCf9BFnhl3rsvTsi/YFCYt+/V7C2m8S90TYIAfaie++glWLN6UqwnD1JlBE/hoJM/vDA/JNADpOTLr/c0XiFg4FlJZrMhQrVvgwF6XnC3ft3Pp253ixKu8EfU2izOncueWT5VOBxAaHL/3vbPXw49fmGyecNQ14nXp/VCUyD2llEC1c+RnC+r8j6ooIqvJ4txPftZiVr9pG0/XhoC1bzb0pmwDYavDuMhDlMXJ0b0x5WPWX4UpgcwJs4WWvTI+pbbrKZurBOwjqv03Sk2CCHCq9JD1XsOrK9TSty55XGQCthrYljoUrpyL2KpIeh63KEfd0UApuO94U2HMHuBPmp0B0vit1K1Y6EjKdUIn6JcwRNL7C7k13de7Y9L2DOzb/TwU/fYSTEMuHNnMG/afN9CMudSIY+49iTE1GgOx+SmO7VA3r3xOzaOXHyTdcS1yIMUGAuq3E3S9l1dUPAbD+PTGIpjSaCsXgXly0HZuzJH0eyX+AK247nbuW9KWgXPV2bM35uFKErQLMSlrF07I8ZP0FMZf++i0Etd/DlZKsfNBeXPcruPWK36XPuyAe0L37jTKTqSnvJKzLoz7B5gA5IRTYkeiwk6hl8ZxWUuCmARuD7SIpV8BediQ6KjttvFkqjjlyR7b+0wQ8RV+c3mOPSe8zx8L6qGHCtDeJmCXqXUmszSPlg++yypdHAm2rKJet+hBB3XUkPQmqFsHgSoLNXc+iW2tQHKKKqTL40iOs5C9pX1Bk0W3fIqi9jtL+EkH1ZJLod1y26keITAL7DlzJYYxJDSe9Ph3SJTELV15DUPVDXORRZzChwZUSTP7vWXRrXXqEqoINBJfsoxReQ/uCIu3zHc2r6yB++wAF1r0P/M8AOd4U2HMHuGUjQuhMz1R5xvqTGwlMxuYcPnLD0LFG1asYWdg48aypnbs6Mvdyh6ufNO1yQb6n6tNq3Kqo+qPLhi4bMYtvn476r6XeqixlS6MEE0zB5Kb0Z3iqTw9RiUqngChL1bDyf/+JhoNvJD92LqUDESY4m6D+s+Ah7kn7kh8XUNz3GVZdthGAV69upJh8Ky1Y4Xwa4hkliJ2EzU+iMqLT5sD1HKC+3vRHeVXf9hps7SSSnl6C+hriwgAF1i4nrKjKSa7jlnlZ6cIlPuMsjws/WKhJulEtlGnboY4FQWpVghsbJp29uHHi2fMbJ03/hkFuQrQqdWAY473/Q2HXtnt4SqeHay1hHYS1IWFDSK7BEjYG2JpyWCOYIP2kAWxhv4F110v6SIpXE/f+jvyYXL+XzCeQq7cEVZbS3utYddnnUm4V8C4PMhZbE5Crz5GrT58X1g7/PNGQUpCCtvn7VXjfSlAjBPW1aCJ4vpM6TOafUOr05Ja4rcs0rY+TKyBRHyK1qUQ4poZrWk5106YSE6dtFeSMYRKEjKqqETkfgl+Xi/Sp9wNePUFE5HMMHE54hL5l38vbR+krvPso3BRZpqhmoZqtqeH0G3mCluXNdE/4c+Aq1J2V6f334ZKfsmrR70GF9mwhddlO8snbcIU87ghry8ag0sv+tak6Vj0xh5frKO7xSM6g0V5uu+zBQf05QU1ObombbU9X31lPqW8TJpiAj7PUchxBtcX1/Y6VCy85JMr/qXFRAbQnDZOmfcYYc+1hziuuuH//qfGJiAm8utVdO7e+ghOYWDlojI6kkjxbz//TNM6ydZV/spfimAKYCahUVGRV+k+DJJPOT6tltbyEH3nvPw0SMny2aeUpMak6IGJVfQFn3v00BYHQvProrfFDEhlF++8xYY/2U2blJMjWYeipstpw1MNTkYJT+d0Je/RE0V/PMYk7oGOy6NZ12KqmlPoRg6onqDa4vj+y8rIXHYPnWMA1TpzyMbHhF9W7mIF4jWGOiVWHmABQ7/2rC7u23sRJHf75/6928jsgWpZn7yh7siNKdTB+yB0Fh3uUjAO2c9e2L3mffFOMCTMPW7k6ZdlVrCCSncC5dxS0o8Advu0eX875eiJNY9GBOJg0RDU/QHzrMaDLMF07t37Qu+SNil+b6bBWjAlEjM0OFtql6r8j+AtGQfvstOC586q6dXCt6awwimgVE/aEmUQ8Fs0DpmvXtuXA8vrTpsy2TmchZqxXStbo45p3D3Ru336wUsUYhdIocEfYG8zmNLirwg2hCkoVu8fnObalQsuUlstOGHp4BJ1YR0E7qiqMbEWnUNqSpqBUvrMHIU8tVRmzcCyNTVcxRjalzAgywJb1Xj8KoVGJO3wr0zsJ25G4B7G16XGllJMaqrBR9XF8gwyc7aNoGZW4T6VlQvRlr9wD8lhaKEMqCvuZgMSkZ3UtXTY6o6PAPXmssv6cJ9VHMofWQDavCUGDWoDjmcc/2kaB+9RbmRKD+wdRYqqZA8s3jE7lKHBPZq3hjymzIAMlMMUCNA4B+GgbBe5J0OavSQ0kr/eQ9ESIpFSUZCnq3o8dncpR4J58rZyw95LLtqNsxuYqavALoKPAHQXuSdr6i1LoBkyYllbrVyFGgTsK3JPdQBO5Z8jRaYAdBe4ocE/S1u9B8+vwUdlAS9IIsUzHHSh6N9pGgXuStLIHrSZ3H0nxAIJFZXem5o4BKovejbZR4J4sLcts/Z8FB4H1mLxHdHOWg5bSYa2MAncUuCdhW5MVpFC5kaDKoNKBT0BpTHPO5KgOdxtto8A9sa1ccELcf1DqvAvRtfhIgQaubKoaMNZG2yhwTzZ1AWDV4v00HriEoPpmlAJoI33V1aPT+afTgufma/cXVzvAolsfwYRN+KQW2HcUpZhG26jEfRYlb/kMAriboFZB0wix0dDGUeCe1G3a2Cx+QW5CAsGaU4HR0MZRVeEkb21L0lpMNvoNpX0bcJouwlEu90+i/X+WAvlLDSdukwAAAABJRU5ErkJggg==" alt="WYD Seoul 2027" />
+    <div class="h-titles">
+      <div class="h-title" id="parishName">중계양업성당 WYD 관리 프로그램</div>
+    </div>
+    <img class="parish-logo" src="data:image/png;base64,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" alt="중계양업성당" />
+    <div class="parish-info"><span class="pi-name">천주교 중계양업 성당 · 5지구</span><span class="pi-sep">|</span><span class="pi-addr">서울특별시 노원구 중계로12길 29</span><span class="pi-sep">|</span><span class="pi-tel"><a href="tel:02-3391-7900">02-3391-7900</a></span></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <span style="font-size:12px;color:var(--sub)">역할</span>
+    <select id="roleSel">
+      <option value="admin">본당 관리자</option>
+      <option value="dept">분과 책임자</option>
+      <option value="host">홈스테이 가정</option>
+    </select>
+  </div>
+</header>
+<div class="shell"><nav id="nav"></nav><main id="main"></main></div>
+<div id="modalRoot"></div>
+
+<script>
+// ════════════════════════════════════════════════════════════════
+// 설정 — Apps Script 웹앱 URL 입력 시 Google Sheets 연동. 비우면 데모.
+const API_URL = "";
+
+// 본당 기본정보 (중계양업성당 체크리스트, 2025.12.13 조사 기준)
+const PARISH = {
+  name:"중계양업성당", district:"5지구",
+  addr:"서울특별시 노원구 중계로12길 29", tel:"02-3391-7900",
+  admDong:"노원구 중계본동",
+  surveyor:"김요한 토마스 (WYD분과장)", surveyorTel:"010-3000-0001",
+  capacity:178,        // 교리실 14개 실측 기반 수면 수용 추정 (만남의방 제외 시 더 적음)
+  yardArea:"앞마당 190㎡ · 주차장 351㎡",
+};
+
+// ── 방문자(순례자) — 인원관리 ───────────────────────────────────
+// 각 배정 그룹에 대표 연락처 + 배정 인원 명단(이름·연락처, 최소 2명)
+const DEMO = {
+  visitors:[
+    {id:1,pid:"P001",gno:"G1",country:"필리핀",lang:"영어",sex:"여",room:"진실",homestay:"",stay:"8/2–8/9",name:"Maria Santos",tel:"+63 917-555-0142",role:"인솔",status:"확정",note:""},
+    {id:2,pid:"P002",gno:"G1",country:"필리핀",lang:"영어",sex:"남",room:"양업관",homestay:"",stay:"8/2–8/9",name:"Jose Cruz",tel:"+63 917-555-0088",role:"",status:"확정",note:""},
+    {id:3,pid:"P003",gno:"G1",country:"필리핀",lang:"영어",sex:"여",room:"진실",homestay:"",stay:"8/2–8/9",name:"Anna Reyes",tel:"+63 917-555-0091",role:"",status:"확정",note:""},
+    {id:4,pid:"P004",gno:"G2",country:"브라질",lang:"포르투갈어",sex:"남",room:"1교리실",homestay:"",stay:"8/2–8/9",name:"João Pereira",tel:"+55 11-95555-0102",role:"인솔",status:"확정",note:""},
+    {id:5,pid:"P005",gno:"G2",country:"브라질",lang:"포르투갈어",sex:"여",room:"3교리실",homestay:"",stay:"8/2–8/9",name:"Ana Lima",tel:"+55 11-95555-0177",role:"",status:"확정",note:""},
+    {id:6,pid:"P006",gno:"G3",country:"아르헨티나",lang:"스페인어",sex:"여",room:"3교리실",homestay:"",stay:"8/2–8/9",name:"Lucía Méndez",tel:"+54 9-11-5555-0120",role:"인솔",status:"확정",note:""},
+    {id:7,pid:"P007",gno:"G3",country:"아르헨티나",lang:"스페인어",sex:"남",room:"대건관",homestay:"",stay:"8/2–8/9",name:"Diego Romero",tel:"+54 9-11-5555-0133",role:"",status:"확정",note:""},
+    {id:8,pid:"P008",gno:"G4",country:"칠레",lang:"스페인어",sex:"여",room:"",homestay:"김엘리사벳",stay:"8/2–8/9",name:"Sofía Gómez",tel:"+56 9-5555-0166",role:"인솔",status:"변동중",note:""},
+    {id:9,pid:"P009",gno:"G4",country:"칠레",lang:"스페인어",sex:"남",room:"",homestay:"최양업 토마스",stay:"8/2–8/9",name:"Mateo Díaz",tel:"+56 9-5555-0171",role:"",status:"변동중",note:""},
+    {id:10,pid:"P010",gno:"G5",country:"페루",lang:"스페인어",sex:"남",room:"",homestay:"최양업 토마스",stay:"8/2–8/9",name:"Diego Flores",tel:"+51 9-5555-0188",role:"인솔",status:"확정",note:""},
+    {id:11,pid:"P011",gno:"G5",country:"페루",lang:"스페인어",sex:"여",room:"",homestay:"김엘리사벳",stay:"8/2–8/9",name:"Carla Vega",tel:"+51 9-5555-0190",role:"",status:"확정",note:""},
+  ],
+  // 성당시설 — 교리실 14개(실측·냉방·콘센트·휠체어) + 주요 공간
+  facilities:[
+    {id:1,rno:"R01",name:"절제",type:"숙박 교리실",area:"3.7×4.9 (18.1㎡)",cap:7,ac:"O",outlet:"2구×2",wheel:"O",gender:"남",status:"가용"},
+    {id:2,rno:"R02",name:"선행",type:"숙박 교리실",area:"3.4×5.7 (19.4㎡)",cap:7,ac:"O",outlet:"2구×1",wheel:"O",gender:"남",status:"가용"},
+    {id:3,rno:"R03",name:"평화",type:"숙박 교리실",area:"3.6×5.4 (19.4㎡)",cap:7,ac:"O",outlet:"2구×2",wheel:"O",gender:"남",status:"가용"},
+    {id:4,rno:"R04",name:"진실",type:"숙박 교리실",area:"3.5×5.4 (18.9㎡)",cap:7,ac:"O",outlet:"2구×2",wheel:"O",gender:"여",status:"사용중"},
+    {id:5,rno:"R05",name:"기쁨",type:"숙박 교리실",area:"2.6×2.9 (7.5㎡)",cap:3,ac:"O",outlet:"2구×1",wheel:"O",gender:"여",status:"가용"},
+    {id:6,rno:"R06",name:"친절",type:"숙박 교리실",area:"3.8×3.3 (12.5㎡)",cap:5,ac:"O",outlet:"2구×2",wheel:"O",gender:"여",status:"사용중"},
+    {id:7,rno:"R07",name:"온유",type:"숙박 교리실",area:"3.8×3.3 (12.5㎡)",cap:5,ac:"O",outlet:"2구×1",wheel:"O",gender:"여",status:"가용"},
+    {id:8,rno:"R08",name:"양업관",type:"숙박 교리실",area:"12.0×11.0 (132㎡)",cap:52,ac:"O",outlet:"2구×5",wheel:"O",gender:"남",status:"사용중"},
+    {id:9,rno:"R09",name:"1교리실",type:"숙박 교리실",area:"3.5×5.25 (18.4㎡)",cap:7,ac:"O",outlet:"2구×1",wheel:"O",gender:"남",status:"가용"},
+    {id:10,rno:"R10",name:"2교리실",type:"숙박 교리실",area:"3.5×5.25 (18.4㎡)",cap:7,ac:"O",outlet:"2구×1",wheel:"O",gender:"남",status:"가용"},
+    {id:11,rno:"R11",name:"3교리실",type:"숙박 교리실",area:"3.0×6.1 (18.3㎡)",cap:7,ac:"O",outlet:"2구×1",wheel:"O",gender:"여",status:"가용"},
+    {id:12,rno:"R12",name:"4교리실",type:"숙박 교리실",area:"3.5×5.5 (19.2㎡)",cap:7,ac:"O",outlet:"2구×1",wheel:"O",gender:"여",status:"가용"},
+    {id:13,rno:"R13",name:"5교리실",type:"숙박 교리실",area:"3.4×5.2 (17.7㎡)",cap:7,ac:"O",outlet:"2구×1",wheel:"O",gender:"여",status:"가용"},
+    {id:14,rno:"R14",name:"대건관",type:"숙박 교리실",area:"9.6×5.9 (56.6㎡)",cap:22,ac:"O",outlet:"2구×2",wheel:"O",gender:"남",status:"사용중"},
+    {id:15,rno:"",name:"만남의방(카페)",type:"숙박 교리실",area:"7.6×11 (83.6㎡)",cap:33,ac:"O",outlet:"2구×4·3구×2",wheel:"O",gender:"공용",status:"사용중"},
+    {id:16,rno:"",name:"대성전",type:"교리교육 (400석)",area:"좌석 400",cap:400,ac:"O",outlet:"AV·프로젝션",wheel:"O",gender:"공용",status:"가용"},
+  ],
+  // 홈스테이 — 구역·주소·연락처
+  homestays:[
+    {id:1,hid:"H001",host:"최양업 토마스",zone:"2-1구역",addr:"노원구 중계로 195 신안아파트 101동 502호",tel:"010-2222-0001",mAdult:1,fAdult:1,fStu:0,mStu:0,fYng:0,mYng:2,lang:"영어",cap:2,period:"8/2–8/9",match:"칠레·페루 남청년 (2)",status:"입실"},
+    {id:2,hid:"H002",host:"김엘리사벳",zone:"2-3구역",addr:"노원구 한글비석로8길 41 중계6단지주공아파트 612동 1103호",tel:"010-2222-0002",mAdult:0,fAdult:1,fStu:0,mStu:0,fYng:2,mYng:0,lang:"스페인어",cap:2,period:"8/2–8/9",match:"칠레·페루 여청년 (2)",status:"확정"},
+    {id:3,hid:"H003",host:"박미카엘",zone:"1-2구역",addr:"노원구 중계로 184 청구아파트 108동 704호",tel:"010-2222-0003",mAdult:1,fAdult:1,fStu:1,mStu:1,fYng:0,mYng:0,lang:"영어",cap:2,period:"8/2–8/9",match:"—",status:"제안"},
+  ],
+  // 분과·구역 — 데이터 테이블. kind: 분과 / 구역. task=임무(이름 옆 표시)
+  departments:[
+    {id:12,name:"WYD분과",task:"환영·교류 프로그램 기획·봉사자 교육",key:false,order:1,kind:"분과"},
+    {id:3,name:"시설분과",task:"순례자 숙소 준비·안전 및 비상 대책",key:false,order:2,kind:"분과"},
+    {id:1,name:"기획분과",task:"전체 준비 기획·일정 조율",key:false,order:3,kind:"분과"},
+    {id:2,name:"재정분과",task:"예산안 작성·집행·결산",key:false,order:4,kind:"분과"},
+    {id:5,name:"사회사목분과",task:"홈스테이 교류·식사 지원",key:false,order:5,kind:"분과"},
+    {id:6,name:"선교분과",task:"신심 활동·순례자 그룹 지원",key:false,order:6,kind:"분과"},
+    {id:7,name:"교육분과",task:"본당 신자 WYD 인식 교육",key:false,order:7,kind:"분과"},
+    {id:9,name:"전례분과",task:"F.O.C. 주관 미사 협조·그룹 전례 지원",key:false,order:8,kind:"분과"},
+    {id:10,name:"청년분과",task:"본당 청년 본대회 인솔·참여",key:false,order:9,kind:"분과"},
+    {id:11,name:"청소년분과",task:"본당 청소년 본대회 인솔·참여",key:false,order:10,kind:"분과"},
+    {id:13,name:"남성구역",task:"구역 내 남성 신자 협력·지원",key:false,order:11,kind:"구역"},
+    {id:14,name:"여성구역",task:"구역 내 여성 신자 협력·지원",key:false,order:12,kind:"구역"},
+  ],
+  // 봉사자 — 매뉴얼 분과 담당별 (role: 분과장/분과원)
+  volunteers:[
+    {id:1,name:"김요한 토마스",tel:"010-3000-0001",dept:"WYD분과",team:"안내·통역",role:"분과장",task:"총괄 인솔·F.O.C. 연계",langs:"영어"},
+    {id:2,name:"이스텔라",tel:"010-3000-0002",dept:"시설분과",team:"숙소관리",role:"분과장",task:"교리실 숙소 배정·안전 점검",langs:"한국어"},
+    {id:3,name:"박안드레아",tel:"010-3000-0003",dept:"시설분과",team:"숙소관리",role:"분과원",task:"이동화장실·샤워 물탱크 관리",langs:"한국어"},
+    {id:4,name:"최베드로",tel:"010-3000-0004",dept:"전례분과",team:"전례지원",role:"분과장",task:"본당 미사·순례자 그룹 전례 지원",langs:"영어"},
+    {id:5,name:"정클라라",tel:"010-3000-0005",dept:"사회사목분과",team:"식사지원",role:"분과장",task:"조식 배부·식사 지원",langs:"한국어"},
+    {id:6,name:"한사도요한",tel:"010-3000-0006",dept:"WYD분과",team:"안내·통역",role:"분과원",task:"안내·통역",langs:"영어/스페인어"},
+    {id:7,name:"윤안나",tel:"010-3000-0007",dept:"청년분과",team:"접수·등록",role:"분과장",task:"본당 청년 인솔",langs:"영어"},
+    {id:8,name:"조가브리엘",tel:"010-3000-0008",dept:"WYD분과",team:"홍보·기록",role:"분과원",task:"지역 사회 협조·공지",langs:"한국어"},
+  ],
+  // 조직도 상단 임원 (편집 가능)
+  officers:[
+    {id:1,slot:"위원장",name:"주임 사제",tel:"",note:"본당위원회(P.O.C.) 총괄"},
+    {id:2,slot:"부위원장",name:"부주임·보좌 사제",tel:"",note:""},
+    {id:4,slot:"원장 수녀",name:"원장 수녀님",tel:"",note:"수도 공동체 협력"},
+    {id:3,slot:"협력 수도자",name:"전교 수녀",tel:"",note:""},
+    {id:5,slot:"집행위원장",name:"사목회장",tel:"",note:""},
+  ],
+  // 일정표 — 일별 준비사항 + 시간대별 세부 (slots)
+  schedule:[
+    {id:101,date:"7/29 (목)",event:"[교구대회] 순례자 도착·환영",prep:"홈스테이·본당 입소, 소통 담당자 연결, 침낭 배치, 저녁 환영 행사",
+      slots:[{time:"오후",text:"순례자 도착·본당/홈스테이 입소·숙소 안내",who:"WYD분과"},{time:"저녁",text:"환영 행사(환영 세리머니)·오리엔테이션",who:"WYD분과"},{time:"18:00",text:"석식 지원",who:"사회사목분과"},{time:"00:00",text:"의무 통금·취침(00:00~06:00)",who:"시설분과"}]},
+    {id:102,date:"7/30 (금)",event:"[교구대회] 아침미사·순례·지역 프로그램",prep:"조식 배부, 이동 동선 관리, 순례·교구별 프로그램 지원",
+      slots:[{time:"오전",text:"아침 미사 및 그룹 모임",who:"전례분과"},{time:"오전",text:"조식 불출·배식",who:"사회사목분과"},{time:"오후",text:"순례 및 교구별 프로그램(한국 문화 체험)",who:"WYD분과"},{time:"저녁",text:"지역 프로그램",who:"청년·청소년분과"}]},
+    {id:103,date:"7/31 (토)",event:"[교구대회] 아침미사·순례·지역 프로그램",prep:"조식 배부, 순례 인솔, 지역 교류 프로그램",
+      slots:[{time:"오전",text:"아침 미사 및 그룹 모임",who:"전례분과"},{time:"오후",text:"순례 및 교구별 프로그램",who:"WYD분과"},{time:"저녁",text:"지역 프로그램(교류)",who:"청년·청소년분과"}]},
+    {id:104,date:"8/1 (일)",event:"[교구대회] 아침미사·순례·지역 프로그램",prep:"조식 배부, 순례 인솔, 지역 교류 프로그램",
+      slots:[{time:"오전",text:"아침 미사 및 그룹 모임",who:"전례분과"},{time:"오후",text:"순례 및 교구별 프로그램",who:"WYD분과"},{time:"저녁",text:"지역 프로그램(교류)",who:"청년·청소년분과"}]},
+    {id:105,date:"8/2 (월)",event:"[교구대회] 주일 미사·서울로 이동(환송)",prep:"주일 미사, 퇴실·짐 정리, 본대회 위해 서울 이동, 홈스테이 감사 인사",
+      slots:[{time:"오전",text:"주일 미사(환송)",who:"전례분과"},{time:"오후",text:"퇴실 점검·짐 정리·서울로 이동",who:"시설분과"},{time:"오후",text:"홈스테이 가정 감사 인사·교리실 정돈",who:"사회사목분과"}]},
+    {id:2,date:"8/3 (화)",event:"[본대회] 개막미사",prep:"06:00 현관 개방, 08:00 조식 배부, 외출 동선 안내",
+      slots:[{time:"06:00",text:"현관 개방·순례자 활동 시작",who:"안내(WYD)"},{time:"07:00",text:"본당 봉사자 숙소 도착",who:"전체"},{time:"08:00",text:"조식 불출·배식 테이블 설치·쓰레기 분리",who:"사회사목분과"},{time:"저녁",text:"개막미사 참가 인솔",who:"WYD분과"},{time:"상시",text:"야간 응급·환자 대비 소통 담당(영어) 대기",who:"통역·의료"}]},
+    {id:3,date:"8/4 (수)",event:"[본대회] 교리 교육·젊은이 축제",prep:"AV·프로젝션 점검, 안내 봉사자 배치, 전례 요청 대비",
+      slots:[{time:"오전",text:"교리 교육(언어권별)·안내 봉사자 배치",who:"안내(WYD)"},{time:"오전",text:"AV·프로젝션·시청각 인프라 점검",who:"시설분과"},{time:"오후",text:"젊은이 축제(Youth Festival)·성소박람회 참가 지원",who:"WYD분과"}]},
+    {id:4,date:"8/5 (목)",event:"[본대회] 교황님 환영행사",prep:"단체 이동 인솔, 귀가 시간 조율",
+      slots:[{time:"오전",text:"교리 교육·단체 이동 인솔",who:"청년·청소년분과"},{time:"저녁",text:"교황님 환영행사 참가",who:"WYD분과"},{time:"저녁",text:"귀가 시간 조율·인원 점검",who:"안내(WYD)"}]},
+    {id:5,date:"8/6 (금)",event:"[본대회] 십자가의 길",prep:"이동 화장실 점검, 야간 소통 담당(영어) 대기",
+      slots:[{time:"오후",text:"젊은이 축제·고해성사 지원",who:"전례분과"},{time:"저녁",text:"십자가의 길 참가 인솔",who:"WYD분과"},{time:"야간",text:"소통 담당(영어) 대기",who:"통역"}]},
+    {id:6,date:"8/7 (토)",event:"[본대회] 밤샘기도(장소 이동)",prep:"밤샘기도 장소로 이동, 물품 보관 철저",
+      slots:[{time:"오전",text:"밤샘기도 장소로 이동 지원",who:"WYD분과"},{time:"09:00",text:"출발 후 물품 보관 철저(폐쇄·근무자 배치)",who:"시설분과"},{time:"오전",text:"열외자(환자·부상) 거점 본당 이동 지원",who:"통역·의료"}]},
+    {id:7,date:"8/8 (일)",event:"[본대회] 폐막미사",prep:"폐막미사 인솔, 패키지별 퇴소 안내(당일/8·9/8·10), 작별 인사 준비",
+      slots:[{time:"오전",text:"폐막미사 참가 인솔",who:"WYD분과"},{time:"오후",text:"교황님과 봉사자의 만남 참가",who:"봉사자"},{time:"오후",text:"패키지별 퇴소 순례자 작별 인사·단체 사진",who:"WYD분과"},{time:"오후",text:"퇴실 점검·교리실 원상복구·분실물 정리",who:"시설분과"}]},
+    {id:8,date:"8/9–8/10",event:"[본대회] 순차 퇴소·뒷정리",prep:"연장 숙박 순례자 아침미사·작별 인사·단체 사진, 전원 퇴소 후 쓰레기·시설물 정비",
+      slots:[{time:"오전",text:"연장 숙박(8/9·8/10 퇴소) 순례자 아침미사·작별 인사·단체 사진",who:"전례분과"},{time:"오전",text:"순례자 최종 퇴소 확인",who:"WYD분과"},{time:"오후",text:"대규모 쓰레기 처리·교리실 시설물 최종 정비",who:"시설분과"}]},
+  ],
+  prep:[],  // D-DAY 준비 일정 (init에서 PREP_DEFAULT로 채움)
+  notices:[
+    {id:1,date:"2027-07-20",title:"봉사자 최종 교육 일정 안내",body:"7/25(일) 오후 2시 대성전에서 전체 봉사자 최종 교육이 있습니다. 분과별 임무를 미리 확인해 주세요.",author:"WYD분과"},
+    {id:2,date:"2027-07-15",title:"홈스테이 가정 사전 모임",body:"홈스테이 배정 가정은 7/22(수) 저녁 7시 만남의방에서 순례자 맞이 준비 모임을 갖습니다.",author:"사회사목분과"},
+  ],
+  posts:[
+    {id:1,date:"2027-07-18",title:"교리실 침낭 수량 문의",body:"양업관 배정 인원이 늘었는데 침낭이 부족할 것 같습니다. 여유분 확인 부탁드립니다.",author:"이스텔라"},
+  ],
+  qna:[
+    {id:1,date:"2027-07-19",author:"Maria (필리핀 G1)",q:"양업관에서 가장 가까운 편의점과 약국은 어디인가요?",a:"정문에서 도보 3분 거리에 GS25 편의점이 있고, 그 옆 건물에 약국이 있습니다. 안내 봉사자에게 문의하셔도 됩니다.",answered:true},
+    {id:2,date:"2027-07-20",author:"João (브라질 G2)",q:"샤워 시설 이용 시간이 정해져 있나요?",a:"",answered:false},
+  ],
+  places:[
+    {id:1,cat:"성당",name:"중계양업성당",nameEn:"Junggye Yangup Catholic Church",addr:"서울 노원구 중계로 195",addrEn:"195 Junggye-ro, Nowon-gu, Seoul",query:"중계양업성당",desc:"본당 · 순례 활동 거점",descEn:"Home parish · pilgrimage base",pin:true},
+    {id:2,cat:"교통",name:"중계역 (7호선)",nameEn:"Junggye Station (Line 7)",addr:"서울 노원구 노원로 지하 415",addrEn:"B415 Nowon-ro, Nowon-gu, Seoul",query:"중계역",desc:"성당에서 가장 가까운 지하철역",descEn:"Nearest subway station to the parish"},
+    {id:3,cat:"교통",name:"하계역 (7호선)",nameEn:"Hagye Station (Line 7)",addr:"서울 노원구 노원로 지하 355",addrEn:"B355 Nowon-ro, Nowon-gu, Seoul",query:"하계역",desc:"대체 이용 가능 역",descEn:"Alternative station"},
+    {id:4,cat:"대회장",name:"광화문광장",nameEn:"Gwanghwamun Square",addr:"서울 종로구 세종대로 172",addrEn:"172 Sejong-daero, Jongno-gu, Seoul",query:"광화문광장",desc:"WYD 주요 행사장(예시) · 실제 장소는 안내 확인",descEn:"Major WYD event site (example) · confirm actual venue"},
+    {id:5,cat:"대회장",name:"여의도 한강공원",nameEn:"Yeouido Hangang Park",addr:"서울 영등포구 여의동로 330",addrEn:"330 Yeouidong-ro, Yeongdeungpo-gu, Seoul",query:"여의도한강공원",desc:"대규모 야외 행사(예시)",descEn:"Large outdoor event (example)"},
+    {id:6,cat:"의료",name:"노원을지대학교병원",nameEn:"Nowon Eulji University Hospital",addr:"서울 노원구 한글비석로 68",addrEn:"68 Hangeulbiseok-ro, Nowon-gu, Seoul",query:"노원을지대학교병원",desc:"응급실 운영 종합병원",descEn:"General hospital with emergency room"},
+    {id:7,cat:"편의",name:"GS25 중계양업점",nameEn:"GS25 Convenience Store",addr:"서울 노원구 중계로 인근",addrEn:"Near Junggye-ro, Nowon-gu, Seoul",query:"중계동 GS25",desc:"성당 인근 편의점",descEn:"Convenience store near the parish"},
+  ],
+
+  gori:[
+    {id:1,date:"2026-07-20",org:"사목회",rep:"정기옥 율리아나"},
+    {id:2,date:"2026-07-21",org:"오카리나 동호회",rep:"장숙희 소피아"},
+    {id:3,date:"2026-07-22",org:"성경말씀 봉사단",rep:"박철우 요셉"},
+    {id:4,date:"2026-07-23",org:"라우다테성가대",rep:"안숙녀 세실리아"},
+    {id:5,date:"2026-07-24",org:"제대회",rep:"황혜미 신디케스"},
+    {id:6,date:"2026-07-25",org:"청년성서모임",rep:"이용준 사도요한"},
+    {id:7,date:"2026-07-26",org:"빈첸시오",rep:"심호섭 마르첼리노"},
+    {id:8,date:"2026-07-27",org:"여성총구역",rep:"권계순 비비안나"},
+    {id:9,date:"2026-07-28",org:"그리스도의어머니Pr.",rep:"김정일 세실리아"},
+    {id:10,date:"2026-07-29",org:"파티마의 성모쎌",rep:"김남순 루시아"},
+    {id:11,date:"2026-07-30",org:"평화의 모후쎌",rep:"신순애 세실리아"},
+    {id:12,date:"2026-07-31",org:"헌화회",rep:"박경희 크리스티나"},
+    {id:13,date:"2026-08-01",org:"초등부 교사회",rep:"임현정 로사"},
+    {id:14,date:"2026-08-02",org:"청년 성가대",rep:"박수룡 토마스"},
+    {id:15,date:"2026-08-03",org:"꾸리아",rep:"박윤균 요셉"},
+    {id:16,date:"2026-08-04",org:"카페테리아",rep:"손은숙 베로니카"},
+    {id:17,date:"2026-08-05",org:"복되신 모후Pr.",rep:"최현정 글라라"},
+    {id:18,date:"2026-08-06",org:"티없으신 마리아 성모쎌",rep:"정화춘 미카엘라"},
+    {id:19,date:"2026-08-07",org:"성모회",rep:"김남순 루시아"},
+    {id:20,date:"2026-08-08",org:"초등부 자모회",rep:"고정은 에스텔"},
+    {id:21,date:"2026-08-09",org:"중등부 교사회",rep:"김가람 유스티나"},
+    {id:22,date:"2026-08-10",org:"울뜨레아",rep:"정명자 마리아"},
+    {id:23,date:"2026-08-11",org:"다윗의 탑 Pr.",rep:"안재창 루치아노"},
+    {id:24,date:"2026-08-12",org:"체나끌로",rep:"김은영 크리스티나"},
+    {id:25,date:"2026-08-13",org:"로사리오 모후쎌",rep:"남혜옥 세실리아"},
+    {id:26,date:"2026-08-14",org:"즐거움의 원천Pr.",rep:"정선영 스테파니아"},
+    {id:27,date:"2026-08-15",org:"M.E",rep:"정창용 나타나엘",note:"성모승천대축일·광복절"},
+    {id:28,date:"2026-08-16",org:"순교자의 모후Pr.",rep:"한태영 사도요한"},
+    {id:29,date:"2026-08-17",org:"양업기타 성가단",rep:"함경림 루갈다",note:"대체공휴일"},
+    {id:30,date:"2026-08-18",org:"반주단",rep:"김도희 스콜라스티카"},
+    {id:31,date:"2026-08-19",org:"성결말씀 봉사단",rep:"권계순 비비안나"},
+    {id:32,date:"2026-08-20",org:"겸손하신 모후Pr.",rep:"최은숙 엘리사벳"},
+    {id:33,date:"2026-08-21",org:"성소후원회",rep:"김재수 베로니카"},
+    {id:34,date:"2026-08-22",org:"하모니아",rep:"정희은 카타리나"},
+    {id:35,date:"2026-08-23",org:"전례단",rep:"박세령 헬레나"},
+    {id:36,date:"2026-08-24",org:"사목회",rep:"정기옥 율리아나"},
+    {id:37,date:"2026-08-25",org:"성체조배회",rep:"정혜랑 루치아"},
+    {id:38,date:"2026-08-26",org:"성실하신 어머니Pr.",rep:"문석 베드로"},
+    {id:39,date:"2026-08-27",org:"상지의 옥좌Pr.",rep:"이재숙 베로니카"},
+    {id:40,date:"2026-08-28",org:"애덕의 모후Pr.",rep:"나소영 베르타"},
+    {id:41,date:"2026-08-29",org:"청년 울뜨레아",rep:"이태승 레오"},
+    {id:42,date:"2026-08-30",org:"중고등부 자모회",rep:"○○"},
+    {id:43,date:"2026-08-31",org:"여성총구역",rep:"권계순 비비안나"}
+  ],
+};
+
+// 조직도(매뉴얼 고정 구조) — 봉사자는 volunteers 데이터로 분과 밑에 표시
+const ORG = {
+  zones:["남성구역","여성구역"],
+};
+
+// D-DAY 기준: 2027 서울 WYD 개막미사 (본대회 시작)
+const WYD_OPEN = "2027-08-03";        // 개막미사(화)
+const WYD_DIOCESE = "2027-07-29";     // 교구대회 시작(목) — 본당 순례자 입소 준비
+// 기간별 사전 준비 일정 (매뉴얼 준비편 + 기도의 날 지향 기반, 편집 가능)
+const PREP_DEFAULT=[
+  {id:1,phase:"상시 (2024~)",title:"기도로 함께 준비",detail:"묵주기도 10억 단 바치기 운동 참여(봉헌한 묵주알은 2027년 실제 묵주로 제작). 매일 20시 27분 '젊은이를 위한 기도'와 주모경 봉헌. 본당 차원의 기도 독려·안내.",ref:"안내서 8장 1) 기도하기",done:false},
+  {id:2,phase:"D-12개월 (2026.08)",title:"본당위원회(P.O.C.) 구성",detail:"주임 사제 중심으로 위원장·부위원장·집행위원장 선임. WYD분과장은 젊은이(청년·청소년) 봉사자를 중심으로 구성. 원장 수녀·전교 수녀 등 수도 공동체 협력 체계 마련.",ref:"본당매뉴얼 준비편 3장",done:false},
+  {id:3,phase:"D-11개월 (2026.09)",title:"본당 신자 WYD 인식 교육",detail:"WYD의 의미·역사·2027 서울 대회 개요를 본당 신자에게 안내. 주제성구 '용기를 내어라. 내가 세상을 이겼다'(요한 16,33)와 영성(진리·사랑·평화) 공유. 냉담자 초대의 계기로 활용.",ref:"안내서 5·6장",done:false},
+  {id:4,phase:"D-10개월 (2026.10)",title:"시설 실측·숙소 계획",detail:"교리실 실측, 수면 수용 인원 산출. 침낭 공간은 1인 2m×1.5m 기준. 화장실·샤워 부족분 대책 수립(이동화장실·물탱크·소방서 급수 협의). 남녀 구분 배치 계획.",ref:"안내서 8장 2)·본당 체크리스트",done:false},
+  {id:5,phase:"D-9개월 (2026.11)",title:"봉사자 모집",detail:"분과별 필요 인원·직무 산출. 안내·숙소 관리·식사 지원·통역·행정 지원 등 역할별 모집. 젊은이 봉사자를 주축으로, 언어 능력(영어·스페인어 등) 고려. 예비 봉사자도 함께 확보.",ref:"본당매뉴얼 준비편 3장 1)",done:false},
+  {id:6,phase:"D-6개월 (2027.02)",title:"봉사자 양성·교육",detail:"전체 운영 흐름 이해 교육 + 분과별 직무 교육. 순례자 환대·문화 차이 이해·안전·번역앱 활용. L.O.C. 사목본부 교육분과의 분과장·구반장 교육 자료 활용.",ref:"본당매뉴얼 준비편 3장 2)",done:false},
+  {id:7,phase:"D-5개월 (2027.03)",title:"홈스테이 가정 모집·심사",detail:"자격: 교적 보유·최근 3년 이내 교무금 납부·판공성사 이력, 성인 거주, 최소 2인 이상 수용 가능 가정. 침낭 공간(1인 2m×1.5m, 침대 없어도 가능)과 욕실(가족과 공동 사용 가능) 확보. 조식(토스트·시리얼·우유 등) 제공 가능 여부 확인, 불가 시 본당 조식 합류로 사전 협의. 5박 6일 수용. 의무 통금(00:00~06:00) 안내. 언어·수용 인원 등록, 동일 국가·언어권 우선 매칭 준비.",ref:"본당매뉴얼 준비편 4장 홈스테이 조건",done:false},
+  {id:8,phase:"D-4개월 (2027.04)",title:"지역 공동체 준비 (지구·본당)",detail:"F.O.C.(본당간 협력) 회의 참여, 지구·교구와의 연대 강화. 월별 지향(4월: 지역 공동체) 기도. 주교님과 함께하는 지구공동체 미사 등 연대 행사 참여.",ref:"안내서 7장 4)·기도의 날",done:false},
+  {id:9,phase:"D-3개월 (2027.05)",title:"숙소·편의 시설 정비",detail:"침낭·멀티탭·빨랫줄 확보. 인근 편의점·세탁·목욕·약국 정보 정리(순례자 안내용). 폭염 대비 식수(정수기·식수대) 인원수에 맞게 준비. 분리수거 시스템 다국어 안내문 게시. 안전·비상 대책 최종화(위중 환자는 L.O.C. 지정 병원 방문 시에만 보험 적용—병원 리스트는 L.O.C. 추후 공지). 생태적 준비(지속가능·재사용·재활용) 실천.",ref:"본당매뉴얼 준비편 4장 본당숙소",done:false},
+  {id:10,phase:"D-2개월 (2027.06)",title:"순례자 배정·명단 확정",detail:"국가별 그룹 개인 배정(P번호), 교리실·홈스테이 배정표 작성. 소통 담당자(영어)·통역 배치. 조식 등 식사 수량 점검. 6월 지향(봉사자)에 맞춘 봉사자 격려.",ref:"본당매뉴얼 준비편 4장",done:false},
+  {id:11,phase:"D-1개월 (2027.07)",title:"최종 점검·리허설",detail:"입소 동선·오리엔테이션 리허설. 봉사자 임무 최종 배정. 비상 연락망 점검. 7월 지향(전 세계 젊은이) 기도. 교구대회 프로그램 최종 확정.",ref:"본당매뉴얼 준비편",done:false},
+  {id:12,phase:"교구대회 7.29(목)",title:"순례자 도착·환영 행사",detail:"순례자 서울 도착·본당/홈스테이 입소. 저녁 환영 행사(환영 세리머니). 숙소 안내·소통 담당자 연결·침낭 배치.",ref:"안내서 3장 3) 교구대회",done:false},
+  {id:13,phase:"교구대회 7.30~8.1",title:"아침미사·순례·지역 프로그램",detail:"오전 아침미사 및 그룹 모임, 오후 순례·교구별 프로그램, 저녁 지역 프로그램 운영. 순례자가 한국 고유 문화를 체험하도록 지원. 조식 배부·이동 동선 관리.",ref:"안내서 3장 3) 교구대회 일정",done:false},
+  {id:14,phase:"교구대회 8.2(월)",title:"주일 미사·서울로 이동(환송)",detail:"주일 미사 후 순례자 본대회를 위해 서울로 이동. 퇴실·짐 정리·환송. 본당 교리실 정돈, 홈스테이 가정 감사 인사.",ref:"안내서 3장 3)",done:false},
+  {id:15,phase:"본대회 8.3~8.8",title:"본대회 운영 지원",detail:"개막미사(8/3)·교리교육(8/4~8/6, 오전)·젊은이 축제(Youth Festival)·성소박람회·고해성사·교황님 환영행사(8/5)·십자가의 길(8/6)·밤샘기도(8/7, 장소 이동)·폐막미사(8/8) 인솔 지원. 폐막미사 후 교황님과 봉사자의 만남. 본당 조식만 제공, 중식·석식은 L.O.C. 선불카드로 순례자 개별 해결.",ref:"본당매뉴얼 실전편 5장",done:false},
+  {id:16,phase:"본대회 8.9~8.10",title:"순례자 퇴소·환송",detail:"패키지 종류에 따라 8/8 폐막미사 직후, 8/9(월) 또는 8/10(화) 퇴소. 연장 숙박자는 함께 아침미사·단체 사진으로 석별의 정을 나눔. 전원 퇴소 후 대규모 쓰레기·시설물 정비.",ref:"본당매뉴얼 실전편 5장",done:false},
+  {id:17,phase:"후속 (2027.08~)",title:"후속 여정·지속 동반",detail:"WYD 이후에도 젊은이가 교회와 지속 소통하고 공동체 안에서 성장하도록 동반. 봉사자 감사·나눔 모임. 본당 차원의 후속 신앙 프로그램 마련.",ref:"안내서 7장 1)·주요 준비 일정",done:false},
+];
+
+// 2027 WYD 고리기도 예식서 (전문) — 각 단체 회합실·교리실에서 사용
+const GORI_RITE = {
+  prep:[
+    "먼저 제대보를 깔고 십자가를 중앙에 모십니다.",
+    "십자가 뒤에 이콘을 세우고 양 옆에 촛대를 세웁니다. ※ 이콘은 거치대 두 개를 나란히 두고 그 위에 세워주세요. 거치대가 아크릴 소재라 파손의 위험이 있습니다. 조심히 다루어 주세요.",
+    "기도 중에 복음 낭독이 있습니다. 기도 전에 낭독자를 미리 정해주시기 바랍니다.",
+    "예식서 마지막에 <묵주 기도 중에 바치는 기도문>이 있습니다. 기도 중에 참고하시기 바랍니다.",
+    "기도를 바치신 후에는 본당 입구의 묵주 기도 봉헌함에 묵주알을 꼭 넣어 주시기 바랍니다.",
+    "기도 후에는 정해진 위치에 기도 물품을 보관해주세요. 이콘 등이 파손되지 않도록 각별히 신경 써 주시기 바랍니다.",
+    "※ 기도하는 모습을 사진으로 찍어서 단체의 분과장에게 전달해주세요."
+  ],
+  gospel:{ref:"요한 16,25-33 <내가 세상을 이겼다>",
+    text:"나는 지금까지 너희에게 이런 것들을 비유로 이야기하였다. 그러나 더 이상 너희에게 비유로 이야기하지 않고 아버지에 관하여 드러내 놓고 너희에게 알려줄 때가 온다. 그날에 너희는 내 이름으로 청할 것이다. 내가 너희를 위하여 아버지께 청하겠다는 말이 아니다. 바로 아버지께서 너희를 사랑하신다. 너희가 나를 사랑하고 또 내가 하느님에게서 나왔다는 것을 믿었기 때문이다. 나는 아버지에게서 나와 세상에 왔다가, 다시 세상을 떠나 아버지께 간다.\n그러자 제자들이 말하였다. \"이제는 드러내 놓고 이야기하시고 비유는 말씀하지 않으시는군요. 저희는 스승님께서 모든 것을 아시고, 또 누가 스승님께 물을 필요도 없다는 것을 이제 알았습니다. 이로써 저희는 스승님께서 하느님에게서 나오셨다는 것을 믿습니다.\"\n예수님께서 그들에게 대답하셨다. \"이제는 너희가 믿느냐? 그러나 너희가 나를 혼자 버려두고 저마다 제 갈 곳으로 흩어질 때가 온다. 아니, 이미 왔다. 그러나 나는 혼자가 아니다. 아버지께서 나와 함께 계시다. 내가 너희에게 이 말을 한 이유는, 너희가 내 안에서 평화를 얻게 하려는 것이다. 너희는 세상에서 고난을 겪을 것이다. 그러나 용기를 내어라, 내가 세상을 이겼다.\""},
+  decades:[
+    "하느님의 뜻 안에서 서울 세계청년대회가 준비될 수 있도록 기도합시다.",
+    "서울 세계청년대회를 통해 모든 이가 주님 안에서 하나가 될 수 있도록 기도합시다.",
+    "서울 세계청년대회가 형제애의 증거가 될 수 있도록 기도합시다.",
+    "서울 세계청년대회를 통해 예수 그리스도의 복음이 온 세상에 선포되도록 기도합시다.",
+    "서울 세계청년대회의 열매가 모든 교회 안에서 지속될 수 있도록 기도합시다."
+  ],
+  official:"젊은이를 사랑하시는 주님, 저희를 주님의 무한한 사랑과 자비로 초대해 주심에 감사드립니다.\n하느님 아버지, 저희 자신을 당신께 맡겨 드리오니, 온 세상 젊은이들이 교회의 품 안에서 위로 받고 친교와 일치의 기쁨을 누리게 하소서.\n'이미 그리고 영원히' 세상을 이기신 그리스도님, \"용기를 내어라\" 하신 당신의 말씀 안에서 온 세상 모든 이가 희망을 발견하고, 사랑과 용서의 십자가가 세상에 대한 승리임을 깨닫게 하소서.\n사랑의 불꽃이신 성령님, 당신의 놀라운 손길로 이 땅에 복음의 씨앗을 심으셨으니, 한국 순교 성인들의 믿음이 저희 가슴에도 타올라 평화와 사랑과 진리의 복음을 살아가는 제자가 되게 하소서.\n주님, 이 세계청년대회의 순례 여정을 통해 저희 모두가 서로의 목소리를 경청하고 그 안에서 당신의 뜻을 찾으며, 모든 하느님 백성이 함께 걷는 시노드 교회가 되게 하소서. 아멘\n\n○ 자비와 평화의 모후이시여, ◎ 저희를 위하여 빌어 주소서.\n○ 서울 세계청년대회의 주보성인들이여, ◎ 모든 젊은이들을 위하여 빌어 주소서."
+};
+const MASTER=[
+  {date:"7/29",label:"교구대회 도착·환영",kind:"등록"},
+  {date:"7/30–8/1",label:"교구대회 아침미사·순례",kind:"행사"},
+  {date:"8/2",label:"교구대회 주일미사·환송",kind:"전례"},
+  {date:"8/3",label:"개막미사",kind:"전례"},{date:"8/4",label:"교리 교육·젊은이 축제",kind:"교리"},
+  {date:"8/5",label:"교황님 환영행사",kind:"행사"},{date:"8/6",label:"십자가의 길",kind:"전례"},
+  {date:"8/7",label:"밤샘기도(장소 이동)",kind:"전례"},{date:"8/8",label:"폐막미사",kind:"전례"},
+  {date:"8/9–8/10",label:"순차 퇴소",kind:"등록"},
+];
+const TASKCATS=[
+  {name:"숙소 관리(시설)",min:6,reserve:2,assigned:2},{name:"식사 지원(사회사목)",min:4,reserve:1,assigned:1},
+  {name:"안내·통역(WYD)",min:4,reserve:2,assigned:2},{name:"전례 지원",min:2,reserve:1,assigned:1},
+];
+// 봉사 팀(실무 단위) — 본당 매뉴얼·D-DAY 준비 기반. 분과와 별개로 기능 팀 필터에 사용
+const VOL_TEAMS=["숙소관리","식사지원","안내·통역","전례지원","의료·안전","환경·미화","수송·이동","홍보·기록","접수·등록"];
+// 언어 구사 선택지 (선택 또는 직접 입력, 여러 개는 / 로 구분)
+const LANG_OPTS=["한국어","영어","이탈리아어","스페인어","프랑스어","포르투갈어","중국어","일어","기타"];
+const SPECIAL=[
+  "교리실 15개 중 만남의 방을 제외한 전부가 지하 — 여름철 습기·냄새 주의.",
+  "2층 대성전 장애인 엘리베이터는 휠체어 1대용·저속. 지하 진입로는 경사가 가팔라 비장애인 도움 필요.",
+  "화장실 절대 부족(남2·여2) — 이동 화장실 대여 필요.",
+  "샤워: 수도 분기 시 수압 저하 — 대형 물탱크+수중모터 대여, 인근 소방서 급수 지원 제안(교구·정부 협의).",
+];
+
+// 구역(zone) → 대표 아파트 단지명 매핑 (중계양업 구역별 주소현황 엑셀 기준, 2026.07 갱신)
+const ZONE_APT={
+  "1-1구역":"라이프·청구·신동아아파트","1-2구역":"라이프·청구·신동아아파트","1-3구역":"라이프·청구·신동아아파트",
+  "1-4구역":"동진아파트 외","1-5구역":"진로대림·현대3차·화인상가","1-6구역":"금호아파트",
+  "1-7구역":"중계로14~16길 일대(영신여고 근처)","1-8구역":"삼성아파트","1-9구역":"현대중계1·2차주택조합","1-10구역":"한화꿈에그린아파트",
+  "2-1구역":"동진·신안아파트","2-2구역":"동진·신안아파트, 천애재활원","2-3구역":"주공6단지아파트","2-4구역":"대림벽산아파트",
+  "2-5구역":"주공7단지아파트","2-6구역":"현대5차아파트","2-7구역":"중계본동 산주위(재개발중)","2-8구역":"현대6차아파트",
+  "3-1구역":"청구3차아파트","3-2구역":"청구3차아파트, 두타빌","3-3구역":"건영3차아파트","3-4구역":"건영3차아파트",
+  "3-5구역":"주공10단지아파트","3-6구역":"롯데·우성아파트","3-7구역":"롯데·우성아파트","3-8구역":"주공8단지아파트","3-9구역":"구역 외",
+};
+function zoneApt(zone){return ZONE_APT[zone]||"—";}
+// 홈스테이 가족(수용 가능) 인원 표기. 성인남·성인여·여학생·남학생·여청년·남청년 → 구 stu/yng → 구 family
+function famText(h,short){
+  if(h==null)return "—";
+  const ma=Number(h.mAdult)||0, fa=Number(h.fAdult)||0;
+  const fs=Number(h.fStu)||0, ms=Number(h.mStu)||0, fy=Number(h.fYng)||0, my=Number(h.mYng)||0;
+  const keys=["mAdult","fAdult","fStu","mStu","fYng","mYng"];
+  const hasSex=keys.some(k=>h[k]!=null&&h[k]!=="");
+  if(hasSex){
+    const t=ma+fa+fs+ms+fy+my;
+    const seg=[];
+    if(short){
+      if(ma)seg.push("남성"+ma); if(fa)seg.push("여성"+fa);
+      if(ms)seg.push("남학"+ms); if(fs)seg.push("여학"+fs); if(my)seg.push("남청"+my); if(fy)seg.push("여청"+fy);
+      return (seg.join("·")||"0")+"·계"+t;
+    }
+    if(ma)seg.push("성인남 "+ma); if(fa)seg.push("성인여 "+fa);
+    if(ms)seg.push("남학생 "+ms); if(fs)seg.push("여학생 "+fs); if(my)seg.push("남청년 "+my); if(fy)seg.push("여청년 "+fy);
+    return (seg.join(" · ")||"인원 미입력")+" · 전체 "+t;
+  }
+  // ── 하위호환: 구 stu/yng ──
+  const hasNum=(h.stu!=null&&h.stu!=="")||(h.yng!=null&&h.yng!=="");
+  if(hasNum){
+    const s=Number(h.stu)||0, y=Number(h.yng)||0, t=s+y;
+    return short?`학${s}·청${y}·계${t}`:`학생 ${s} · 청년 ${y} · 전체 ${t}`;
+  }
+  return esc(h.family||"")||"—";
+}
+// 가족 인원 뱃지형 (PC 가독성). 성인=회색, 남=파랑, 여=주황 톤
+function famBadges(h){
+  if(h==null)return "—";
+  const items=[
+    ["성인남",Number(h.mAdult)||0,'gray'],["성인여",Number(h.fAdult)||0,'gray'],
+    ["남학생",Number(h.mStu)||0,'blue'],["여학생",Number(h.fStu)||0,'amber'],
+    ["남청년",Number(h.mYng)||0,'blue'],["여청년",Number(h.fYng)||0,'amber'],
+  ].filter(x=>x[1]>0);
+  if(!items.length){const legacy=famText(h);return legacy==="—"?"—":`<span style="font-size:12.5px">${esc(legacy)}</span>`;}
+  const total=items.reduce((s,x)=>s+x[1],0);
+  const chips=items.map(([l,n,t])=>`<span class="badge b-${t}" style="font-size:11px">${l} ${n}</span>`).join(" ");
+  return `<div style="display:flex;flex-wrap:wrap;gap:3px;align-items:center">${chips}<span style="font-size:11.5px;color:var(--sub);font-weight:600">계 ${total}</span></div>`;
+}
+// 홈스테이 요청(수용 가능) 성별 도출: 남만→"남", 여만→"여", 둘 다→"남녀", 없으면 "—"
+function reqSex(h){
+  if(h==null)return "—";
+  const male=(Number(h.mStu)||0)+(Number(h.mYng)||0);
+  const female=(Number(h.fStu)||0)+(Number(h.fYng)||0);
+  if(male&&female)return "남녀";
+  if(male)return "남";
+  if(female)return "여";
+  return "—";
+}
+// 숙소 배정 후보 목록. selfId=편집 중 방문자 id(자기 배정은 점유에서 제외), sex=방문자 성별
+// 반환: [{value, label, kind, gender, cap, used, avail(성별·정원 OK 여부), reason}]
+function stayCandidates(sex,selfId){
+  const V=state.data.visitors, F=state.data.facilities, H=state.data.homestays;
+  const usedRoom={}, usedHs={};
+  V.forEach(v=>{ if(selfId!=null&&String(v.id)===String(selfId))return;
+    if(v.room)usedRoom[v.room]=(usedRoom[v.room]||0)+1;
+    if(v.homestay)usedHs[v.homestay]=(usedHs[v.homestay]||0)+1; });
+  const list=[];
+  // 교리실 (숙박 유형만)
+  F.filter(f=>(f.type||"").indexOf("숙박")>-1).forEach(f=>{
+    const used=usedRoom[f.name]||0, cap=Number(f.cap)||0;
+    const g=f.gender||"공용";
+    const sexOK = g==="공용" || !sex || g===sex;
+    const capOK = !cap || used<cap;
+    let reason=""; if(!sexOK)reason=g+"전용"; else if(!capOK)reason="만실";
+    list.push({value:"room:"+f.name, label:(f.rno?f.rno+" ":"")+f.name, kind:"교리실",
+      gender:g, cap, used, avail:sexOK&&capOK, reason});
+  });
+  // 홈스테이
+  H.forEach(h=>{
+    const used=usedHs[h.host]||0, cap=Number(h.cap)||0;
+    const rq=reqSex(h);
+    const sexOK = rq==="—" || rq==="남녀" || !sex || rq===sex;
+    const capOK = !cap || used<cap;
+    let reason=""; if(!sexOK)reason=rq+"요청"; else if(!capOK)reason="정원참";
+    list.push({value:"hs:"+h.host, label:"홈 "+h.host+(h.hid?" ("+h.hid+")":""), kind:"홈스테이",
+      gender:rq, cap, used, avail:sexOK&&capOK, reason});
+  });
+  return list;
+}
+
+const ROLES={
+  admin:{label:"본당 관리자",mods:["dash","prep","gori","org","facility","homestay","schedule","places","tasks","people","notices","posts","qna"],edit:true},
+  dept:{label:"분과 책임자",mods:["dash","prep","gori","org","facility","homestay","schedule","places","tasks","people","notices","posts","qna"],edit:false},
+  host:{label:"홈스테이 가정",mods:["dash","prep","gori","org","facility","homestay","schedule","places","tasks","people","notices","posts","qna"],edit:false},
+};
+const NAV=[
+  {id:"dash",label:"대시보드",en:"Dashboard",icon:"▦"},
+  {id:"prep",label:"D-DAY 준비",en:"D-DAY Prep",icon:"⏳"},
+  {id:"gori",label:"고리기도 일정",en:"Prayer Chain",icon:"🙏"},
+  {id:"org",label:"조직도",en:"Organization",icon:"🗂"},
+  {id:"schedule",label:"일정표",en:"Schedule",icon:"📅"},
+  {id:"facility",label:"성당시설",en:"Facilities",icon:"🏛"},
+  {id:"tasks",label:"봉사자 명단",en:"Volunteers",icon:"✓"},
+  {id:"homestay",label:"홈스테이 가정",en:"Homestays",icon:"🏠"},
+  {id:"people",label:"방문자 명단",en:"Pilgrims",icon:"👥"},
+  {id:"notices",label:"공지사항",en:"Notices",icon:"📢"},
+  {id:"posts",label:"게시판",en:"Board",icon:"💬"},
+  {id:"qna",label:"방문자 Q&A",en:"Pilgrim Q&A",icon:"❓"},
+  {id:"places",label:"추천 장소·지도",en:"Places & Map",icon:"📍"},
+];
+
+// 폼 스키마
+const SCHEMA={
+  visitors:{title:"방문자(순례자) 개인",fields:[
+    {k:"name",label:"이름",type:"text"},
+    {k:"sex",label:"성별",type:"select",opts:["","남","여"]},
+    {k:"tel",label:"연락처",type:"text"},
+    {k:"gno",label:"그룹 번호 (예: G1)",type:"text"},
+    {k:"country",label:"국가",type:"text"},{k:"lang",label:"주 사용 언어 (선택 또는 입력)",type:"combo",opts:LANG_OPTS,from:"lang"},
+    {k:"stayplace",label:"숙소 배정 (성별·정원 자동 확인)",type:"stayplace"},
+    {k:"stay",label:"숙박 기간",type:"text"},
+    {k:"role",label:"역할 (예: 인솔, 통역)",type:"text"},
+    {k:"status",label:"상태",type:"select",opts:["확정","변동중","대기"]},
+    {k:"note",label:"비고(메모)",type:"textarea"},
+  ]},
+  facilities:{title:"시설",fields:[
+    {k:"rno",label:"번호 (동선 순서, 예: R01 · 만남의방/대성전은 비움)",type:"text"},
+    {k:"name",label:"공간 이름",type:"text"},{k:"type",label:"유형",type:"text"},
+    {k:"area",label:"면적(실측)",type:"text"},{k:"cap",label:"수용 인원",type:"number"},
+    {k:"ac",label:"냉방",type:"select",opts:["O","X"]},
+    {k:"gender",label:"남녀구분",type:"select",opts:["남","여","공용"]},
+    {k:"status",label:"상태",type:"select",opts:["가용","사용중","점검중"]},
+    {k:"note",label:"비고(메모)",type:"textarea"},
+  ]},
+  homestays:{title:"홈스테이 가정",fields:[
+    {k:"host",label:"가정 대표자 (이름 + 세례명, 예: 최양업 토마스)",type:"text"},{k:"zone",label:"구역 (예: 2-1구역 · 아파트단지 열에 자동 표시)",type:"text"},
+    {k:"addr",label:"주소",type:"text"},
+    {k:"tel",label:"연락처",type:"text"},
+    {k:"mAdult",label:"성인 남 (명)",type:"number"},
+    {k:"fAdult",label:"성인 여 (명)",type:"number"},
+    {k:"fStu",label:"여학생 (명)",type:"number"},
+    {k:"mStu",label:"남학생 (명)",type:"number"},
+    {k:"fYng",label:"여청년 (명)",type:"number"},
+    {k:"mYng",label:"남청년 (명)",type:"number"},
+    {k:"lang",label:"가능 언어 (선택 또는 입력)",type:"combo",opts:LANG_OPTS,from:"lang"},
+    {k:"cap",label:"수용 인원",type:"number"},{k:"period",label:"가능 기간",type:"text"},
+    {k:"match",label:"매칭 그룹",type:"text"},
+    {k:"status",label:"상태",type:"select",opts:["제안","확정","입실","퇴실"]},
+    {k:"note",label:"비고(메모)",type:"textarea"},
+  ]},
+  departments:{title:"분과·구역",fields:[
+    {k:"name",label:"이름",type:"text"},
+    {k:"kind",label:"구분",type:"select",opts:["분과","구역"]},
+    {k:"task",label:"임무(이름 옆 표시)",type:"textarea"},
+    {k:"key",label:"핵심(강조)",type:"select",opts:["false","true"]},
+  ]},
+  volunteers:{title:"봉사자",fields:[
+    {k:"name",label:"이름",type:"text"},{k:"tel",label:"연락처",type:"text"},
+    {k:"dept",label:"소속 분과",type:"dept"},
+    {k:"team",label:"팀 (목록에서 고르거나 새 팀 입력 · 추후 추가 가능)",type:"team"},
+    {k:"role",label:"직책",type:"select",opts:["분과장","분과원"]},
+    {k:"task",label:"담당 임무",type:"text"},
+    {k:"langs",label:"언어 구사 (목록 선택 또는 직접 입력 · 여러 개는 / 로 구분)",type:"combo",opts:LANG_OPTS,from:"langs"},
+    {k:"note",label:"비고(메모)",type:"text"},
+  ]},
+  officers:{title:"임원",fields:[
+    {k:"slot",label:"직위",type:"text"},{k:"name",label:"이름",type:"text"},
+    {k:"tel",label:"연락처",type:"text"},{k:"note",label:"비고",type:"text"},
+  ]},
+  schedule:{title:"일정 / 준비사항",fields:[
+    {k:"date",label:"날짜",type:"text"},{k:"event",label:"행사",type:"text"},
+    {k:"prep",label:"일별 준비사항",type:"textarea"},
+  ]},
+  prep:{title:"D-DAY 준비 단계",fields:[
+    {k:"phase",label:"시기 (예: D-6개월 (2027.02))",type:"text"},
+    {k:"title",label:"준비 항목",type:"text"},
+    {k:"detail",label:"세부 내용",type:"textarea"},
+    {k:"ref",label:"근거 (안내서·매뉴얼 출처)",type:"text"},
+  ]},
+  notices:{title:"공지사항",fields:[
+    {k:"title",label:"제목",type:"text"},
+    {k:"body",label:"내용",type:"textarea"},
+    {k:"author",label:"작성 주체 (분과 등)",type:"text"},
+    {k:"date",label:"날짜 (YYYY-MM-DD)",type:"text"},
+  ]},
+  posts:{title:"게시글",fields:[
+    {k:"title",label:"제목",type:"text"},
+    {k:"body",label:"내용",type:"textarea"},
+    {k:"author",label:"작성자 이름",type:"text"},
+    {k:"date",label:"날짜 (YYYY-MM-DD)",type:"text"},
+  ]},
+  qna:{title:"방문자 질문",fields:[
+    {k:"author",label:"질문자 (이름/그룹)",type:"text"},
+    {k:"q",label:"질문 내용",type:"textarea"},
+    {k:"date",label:"날짜 (YYYY-MM-DD)",type:"text"},
+  ]},
+  places:{title:"추천 장소",fields:[
+    {k:"cat",label:"분류",type:"select",opts:["성당","교통","대회장","의료","편의","기타"]},
+    {k:"name",label:"장소 이름 (한글)",type:"text"},
+    {k:"nameEn",label:"영문 이름 (English name)",type:"text"},
+    {k:"addr",label:"주소 (한글)",type:"text"},
+    {k:"addrEn",label:"영문 주소 (선택 · English address)",type:"text"},
+    {k:"query",label:"지도 검색어 (비우면 장소 이름 사용 · 네이버는 한글이 정확)",type:"text"},
+    {k:"desc",label:"설명/메모 (한글)",type:"textarea"},
+    {k:"descEn",label:"영문 설명 (선택 · English note)",type:"text"},
+  ]},
+  gori:{title:"고리기도 일정",fields:[
+    {k:"date",label:"날짜 (YYYY-MM-DD)",type:"text"},
+    {k:"org",label:"담당 단체",type:"text"},
+    {k:"rep",label:"대표자 (이름 + 세례명)",type:"text"},
+    {k:"note",label:"비고 (선택 · 공휴일 등)",type:"text"},
+  ]},
+};
+
+let state={role:"admin",tab:"dash",data:null,online:false};
+const $=(id)=>document.getElementById(id);
+const esc=(s)=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const num=(n)=>Number(n).toLocaleString();
+const canEdit=()=>ROLES[state.role].edit;
+// 언어 표시: 한국어는 제외 (예: "영어/한국어" -> "영어", "한국어" -> "")
+function showLangs(s){
+  if(!s)return "";
+  return String(s).split(/[\/,·]/).map(x=>x.trim()).filter(x=>x && x!=="한국어").join("/");
+}
+const nextId=(arr)=>arr.reduce((m,x)=>Math.max(m,Number(x.id)||0),0)+1;
+
+async function apiGet(){
+  if(!API_URL){state.online=false;return JSON.parse(JSON.stringify(DEMO));}
+  try{const r=await fetch(API_URL+"?action=read");const j=await r.json();state.online=true;return j;}
+  catch(e){state.online=false;return JSON.parse(JSON.stringify(DEMO));}
+}
+async function apiWrite(t,row){if(!API_URL)return;try{await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify({action:"upsert",table:t,row})});}catch(e){}}
+async function apiDelete(t,id){if(!API_URL)return;try{await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify({action:"delete",table:t,id})});}catch(e){}}
+function syncbar(){$("syncbar").innerHTML=state.online?"":`<div class="banner">데모 모드 — Google Sheets 미연결. 추가·수정·삭제는 화면에만 반영. (API_URL 설정 후 실연동)</div>`;}
+
+function badge(t,tone){return `<span class="badge b-${tone}">${esc(t)}</span>`;}
+function secHead(title,sub,addTable,exportKey){
+  const add=(addTable&&canEdit())?`<button class="btn btn-primary" onclick="openAdd('${addTable}')">＋ 추가</button>`:"";
+  const exp=exportKey?exportBtns(exportKey):"";
+  const right=(exp||add)?`<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">${exp}${add}</div>`:"";
+  return `<div class="sec-row"><div><h2 class="sec">${esc(title)}</h2><p class="sec-sub">${esc(sub)}</p></div>${right}</div>`;
+}
+function rowActions(t,id){if(!canEdit())return"";return `<button class="btn-sm" onclick="openEdit('${t}',${id})">편집</button><button class="btn-sm btn-danger" onclick="removeRow('${t}',${id})">삭제</button>`;}
+
+// ── 내보내기(CSV/PDF·프린트) ──────────────────────────────────
+// 각 명단의 열 정의: {key, header, get:(row)=>표시값}
+// ══ 엑셀 붙여넣기(일괄 추가) ══
+// 각 명단의 붙여넣기 열 순서 정의. 엑셀에서 이 순서대로 복사→붙여넣기
+const PASTE_DEFS={
+  visitors:{label:"방문자(순례자)", table:"visitors",
+    cols:[["gno","그룹(G1)"],["name","이름"],["sex","성별(남/여)"],["country","국가"],["lang","언어"],["stay","기간"],["role","역할"],["status","상태"],["tel","연락처"],["note","비고"]],
+    numeric:[]},
+  homestays:{label:"홈스테이 가정", table:"homestays",
+    cols:[["host","가정(대표자)"],["zone","구역"],["addr","주소"],["tel","연락처"],["mAdult","성인남"],["fAdult","성인여"],["mStu","남학생"],["fStu","여학생"],["mYng","남청년"],["fYng","여청년"],["lang","언어"],["cap","수용"],["period","기간"],["status","상태"],["note","비고"]],
+    numeric:["mAdult","fAdult","mStu","fStu","mYng","fYng","cap"]},
+  tasks:{label:"봉사자", table:"volunteers",
+    cols:[["dept","소속분과"],["team","팀"],["role","직책"],["name","이름"],["tel","연락처"],["task","담당임무"],["langs","언어구사"],["note","비고"]],
+    numeric:[]},
+};
+// 붙여넣은 텍스트(TSV/CSV) → 행 배열 파싱. 탭 우선, 없으면 콤마
+function parsePaste(text){
+  const lines=text.replace(/\r/g,"").split("\n").filter(l=>l.trim()!=="");
+  return lines.map(line=>{
+    const cells=line.indexOf("\t")>-1?line.split("\t"):splitCsvLine(line);
+    return cells.map(c=>c.trim());
+  });
+}
+function splitCsvLine(line){
+  const out=[];let cur="",q=false;
+  for(let i=0;i<line.length;i++){const ch=line[i];
+    if(q){if(ch==='"'){if(line[i+1]==='"'){cur+='"';i++;}else q=false;}else cur+=ch;}
+    else{if(ch===','){out.push(cur);cur="";}else if(ch==='"')q=true;else cur+=ch;}}
+  out.push(cur);return out;
+}
+function openPasteModal(pkey){
+  const P=PASTE_DEFS[pkey]; if(!P)return;
+  const headerRow=P.cols.map(c=>c[1]).join(" | ");
+  $("modalRoot").innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal" style="max-width:640px">
+    <h3>${P.label} · 엑셀 붙여넣기로 추가</h3>
+    <p style="font-size:12.5px;color:var(--sub);margin:0 0 8px">엑셀에서 아래 <b>열 순서</b>대로 여러 행을 복사한 뒤, 입력칸에 붙여넣기(Ctrl+V) 하세요. 머리글 행은 넣어도/빼도 됩니다.</p>
+    <div style="background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:11.5px;color:var(--sub);margin-bottom:10px;overflow-x:auto;white-space:nowrap">순서: ${esc(headerRow)}</div>
+    <textarea id="pasteBox" placeholder="여기에 붙여넣기…" style="width:100%;min-height:120px;font-size:13px;font-family:monospace;padding:10px;border:1px solid var(--line);border-radius:8px" oninput="renderPastePreview('${pkey}')"></textarea>
+    <div id="pastePreview" style="margin-top:10px"></div>
+    <div class="modal-actions"><button class="btn" onclick="closeModal()">취소</button>
+      <button class="btn btn-primary" id="pasteAddBtn" onclick="commitPaste('${pkey}')" disabled>추가</button></div>
+  </div></div>`;
+}
+// 붙여넣기 파싱 결과를 행 객체로 변환 (머리글 자동 감지)
+function pasteRows(pkey){
+  const P=PASTE_DEFS[pkey];
+  const box=$("pasteBox"); if(!box)return [];
+  let rows=parsePaste(box.value);
+  if(!rows.length)return [];
+  // 머리글 행 감지: 첫 행이 열 라벨과 상당히 일치하면 제외
+  const labels=P.cols.map(c=>c[1].replace(/\([^)]*\)/g,"").trim());
+  const first=rows[0].map(x=>x.replace(/\([^)]*\)/g,"").trim());
+  const matchCnt=first.filter(x=>labels.includes(x)||["이름","가정","구역","소속분과","분과"].includes(x)).length;
+  if(matchCnt>=2)rows=rows.slice(1);
+  return rows.map(cells=>{
+    const o={};
+    P.cols.forEach((c,i)=>{let v=(cells[i]!=null?cells[i]:"").trim();
+      if(P.numeric.includes(c[0]))v=Number(v)||0;
+      o[c[0]]=v;});
+    return o;
+  }).filter(o=>{
+    // 이름/가정/대표 필드가 비면 제외
+    return (o.name||o.host||"").toString().trim()!=="";
+  });
+}
+function renderPastePreview(pkey){
+  const P=PASTE_DEFS[pkey];
+  const rows=pasteRows(pkey);
+  const btn=$("pasteAddBtn"); if(btn)btn.disabled=rows.length===0;
+  const box=$("pastePreview"); if(!box)return;
+  if(!rows.length){box.innerHTML=`<div style="color:var(--sub);font-size:12.5px">유효한 행이 없습니다. 열 순서를 확인하세요.</div>`;return;}
+  const show=rows.slice(0,8);
+  const th=P.cols.map(c=>`<th style="padding:4px 6px;text-align:left;white-space:nowrap">${esc(c[1])}</th>`).join("");
+  const tr=show.map(o=>`<tr>${P.cols.map(c=>`<td style="padding:4px 6px;border-top:1px solid var(--line);white-space:nowrap">${esc(String(o[c[0]]))}</td>`).join("")}</tr>`).join("");
+  box.innerHTML=`<div style="font-size:12.5px;color:var(--blue);font-weight:600;margin-bottom:4px">미리보기 · ${rows.length}행 추가 예정${rows.length>8?" (앞 8행 표시)":""}</div>
+    <div style="overflow-x:auto;border:1px solid var(--line);border-radius:8px"><table style="font-size:11.5px;border-collapse:collapse;min-width:100%"><thead style="background:var(--bg)"><tr>${th}</tr></thead><tbody>${tr}</tbody></table></div>`;
+}
+function commitPaste(pkey){
+  const P=PASTE_DEFS[pkey];
+  const rows=pasteRows(pkey);
+  if(!rows.length){alert("추가할 유효한 행이 없습니다.");return;}
+  if(!confirm(`${P.label} ${rows.length}행을 추가할까요?`))return;
+  const arr=state.data[P.table];
+  rows.forEach(o=>{
+    o.id=nextId(arr);
+    if(P.table==='visitors'){const n=arr.reduce((m,x)=>{const k=parseInt(String(x.pid||"").replace(/\D/g,""));return k>m?k:m;},0);o.pid="P"+String(n+1).padStart(3,"0");}
+    if(P.table==='homestays'){const n=arr.reduce((m,x)=>{const k=parseInt(String(x.hid||"").replace(/\D/g,""));return k>m?k:m;},0);o.hid="H"+String(n+1).padStart(3,"0");}
+    arr.push(o);
+    apiWrite(P.table,o);
+  });
+  closeModal();render();
+  alert(`${rows.length}건이 추가되었습니다.`);
+}
+function exportDefs(){
+  const facSex=g=>g||"공용";
+  return {
+    facilities:{title:"성당시설 (교리실·수용 현황)",
+      cols:[
+        {h:"번호",g:f=>f.rno||""},{h:"공간",g:f=>f.name},{h:"유형",g:f=>f.type},
+        {h:"면적(실측)",g:f=>f.area||""},{h:"수용",g:f=>f.cap||""},{h:"냉방",g:f=>f.ac||""},
+        {h:"남녀구분",g:f=>facSex(f.gender)},{h:"상태",g:f=>f.status||""},{h:"비고",g:f=>f.note||""},
+        {h:"배정 인원",g:f=>state.data.visitors.filter(v=>v.room===f.name).length}
+      ],
+      rows:()=>{const N=state.data.facilities.filter(x=>!FAC_PINNED_BOTTOM.includes(x.name));
+        const P=state.data.facilities.filter(x=>FAC_PINNED_BOTTOM.includes(x.name)).sort((a,b)=>FAC_PINNED_BOTTOM.indexOf(a.name)-FAC_PINNED_BOTTOM.indexOf(b.name));
+        return N.slice().sort((a,b)=>(Number(String(a.rno||"").replace(/\D/g,""))||0)-(Number(String(b.rno||"").replace(/\D/g,""))||0)).concat(P);}
+    },
+    tasks:{title:"봉사자 명단 (분과·팀·직책)",
+      cols:[
+        {h:"소속 분과",g:t=>t.dept||""},{h:"팀",g:t=>t.team||""},{h:"직책",g:t=>t.role||""},{h:"이름",g:t=>t.name||""},
+        {h:"연락처",g:t=>t.tel||""},{h:"담당 임무",g:t=>t.task||""},{h:"언어 구사",g:t=>t.langs||""},{h:"비고",g:t=>t.note||""}
+      ],
+      rows:()=>state.data.volunteers.slice()
+    },
+    homestays:{title:"홈스테이 가정 명단",
+      cols:[
+        {h:"번호",g:h=>h.hid||""},{h:"구역",g:h=>h.zone||""},{h:"아파트단지",g:h=>zoneApt(h.zone)},
+        {h:"가정",g:h=>h.host||""},{h:"주소",g:h=>h.addr||""},{h:"연락처",g:h=>h.tel||""},
+        {h:"가족 인원",g:h=>famText(h)},{h:"언어",g:h=>h.lang||""},{h:"수용",g:h=>h.cap||""},
+        {h:"요청 성별",g:h=>reqSex(h)},{h:"상태",g:h=>h.status||""},
+        {h:"숙박자",g:h=>state.data.visitors.filter(v=>v.homestay===h.host).map(p=>(p.pid||"")+" "+p.name+"("+(p.country||"")+")").join(" / ")||"미배정"},
+        {h:"비고",g:h=>h.note||""}
+      ],
+      rows:()=>state.data.homestays.slice().sort((a,b)=>String(a.hid||"").localeCompare(String(b.hid||""),"ko"))
+    },
+    visitors:{title:"방문자(순례자) 명단",
+      cols:[
+        {h:"번호",g:v=>v.pid||""},{h:"그룹",g:v=>v.gno||""},{h:"이름",g:v=>v.name||""},{h:"성별",g:v=>v.sex||""},
+        {h:"국가",g:v=>v.country||""},{h:"언어",g:v=>v.lang||""},
+        {h:"숙박 장소",g:v=>v.room?("교리실 "+v.room):v.homestay?("홈 "+v.homestay):"미배정"},
+        {h:"기간",g:v=>v.stay||""},{h:"역할",g:v=>v.role||""},{h:"상태",g:v=>v.status||""},
+        {h:"연락처",g:v=>v.tel||""},{h:"비고",g:v=>v.note||""}
+      ],
+      rows:()=>state.data.visitors.slice().sort((a,b)=>String(a.pid||"").localeCompare(String(b.pid||""),"ko"))
+    }
+  };
+}
+function csvCell(s){s=String(s==null?"":s);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function downloadCSV(key){
+  const d=exportDefs()[key]; if(!d)return;
+  const rows=d.rows();
+  const head=d.cols.map(c=>c.h);
+  const body=rows.map(r=>d.cols.map(c=>csvCell(c.g(r))).join(","));
+  const csv="\uFEFF"+[head.map(csvCell).join(","),...body].join("\r\n"); // BOM: Excel 한글
+  const blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  const today=new Date().toISOString().slice(0,10);
+  a.href=url; a.download=`${PARISH.name}_${d.title.split(" ")[0]}_${today}.csv`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+// 프린트용 HTML 표 생성 (대성하우징 스타일: 파란 헤더·줄무늬)
+function printTable(d){
+  const rows=d.rows();
+  const th=d.cols.map(c=>`<th>${esc(c.h)}</th>`).join("");
+  const tr=rows.map((r,i)=>`<tr class="${i%2?'alt':''}">`+d.cols.map(c=>`<td>${esc(String(c.g(r)))}</td>`).join("")+`</tr>`).join("");
+  return `<div class="rep-sec"><h2>${esc(d.title)} <span class="cnt">· ${rows.length}건</span></h2>
+    <table><thead><tr>${th}</tr></thead><tbody>${tr}</tbody></table></div>`;
+}
+// 단일 명단 프린트/PDF (헤더에서 호출)
+function printOne(key){
+  const d=exportDefs()[key]; if(!d)return;
+  openPrintWindow(d.title, printTable(d));
+}
+// 4대 명단 종합 보고서 (대시보드)
+function printAll(){
+  const D=exportDefs();
+  const T=totals();
+  const kpi=[
+    ["방문자(순례자)",T.total+"명"],["홈스테이 가정",state.data.homestays.length+"곳"],
+    ["봉사자",state.data.volunteers.length+"명"],["숙박 시설",state.data.facilities.filter(f=>(f.type||"").includes("숙박")).length+"실"]
+  ];
+  const kpiHtml=`<div class="rep-kpi">${kpi.map(([l,v])=>`<div class="kpi"><div class="kl">${l}</div><div class="kv">${v}</div></div>`).join("")}</div>`;
+  const secs=["visitors","homestays","tasks","facilities"].map((k,i)=>{
+    const d=D[k];
+    return `<div class="rep-block ${i>0?'page-break':''}"><div class="rep-num">${["①","②","③","④"][i]}</div>${printTable(d)}</div>`;
+  }).join("");
+  openPrintWindow(PARISH.name+" WYD 종합 명단 보고서", kpiHtml+secs, true);
+}
+function openPrintWindow(title, bodyHtml, isAll){
+  const today=new Date();
+  const meta=`기간: 2027 WYD · 출력일: ${today.toISOString().slice(0,10)} · 작성자: ${ROLES[state.role].label} · 대상: ${PARISH.name}`;
+  const w=window.open("","_blank");
+  if(!w){alert("팝업이 차단되었습니다. 브라우저 팝업 허용 후 다시 시도해 주세요.");return;}
+  w.document.write(`<!doctype html><html lang="ko"><head><meta charset="utf-8"><title>${esc(title)}</title>
+  <style>
+    *{box-sizing:border-box}
+    body{font-family:'Malgun Gothic','맑은 고딕',system-ui,sans-serif;color:#1a2a3a;margin:0;padding:24px;font-size:12px}
+    .rep-head{border-bottom:3px solid #2b4a6f;padding-bottom:10px;margin-bottom:16px}
+    .rep-head h1{font-size:20px;color:#2b4a6f;margin:0 0 6px}
+    .rep-head .meta{color:#667;font-size:11px}
+    .rep-kpi{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+    .kpi{flex:1;min-width:120px;border:1px solid #d5dde6;border-radius:8px;padding:12px 14px;background:#f4f7fb}
+    .kpi .kl{font-size:11px;color:#667;margin-bottom:4px}
+    .kpi .kv{font-size:22px;font-weight:700;color:#2b4a6f}
+    .rep-num{font-size:15px;font-weight:700;color:#2b4a6f;margin:18px 0 6px}
+    .rep-sub{font-size:12px;color:#667;margin:0 0 10px}
+    .rep-block{margin-bottom:18px}
+    .rep-sec{margin-bottom:18px}
+    .rep-sec h2{font-size:14px;color:#2b4a6f;margin:0 0 8px}
+    .rep-sec h2 .cnt{font-weight:400;color:#889;font-size:12px}
+    table{width:100%;border-collapse:collapse;font-size:11px}
+    thead th{background:#2b4a6f;color:#fff;padding:7px 8px;text-align:left;border:1px solid #24405f;white-space:nowrap}
+    tbody td{padding:6px 8px;border:1px solid #dce3ea;vertical-align:top}
+    tbody tr.alt td{background:#f4f7fb}
+    .rep-foot{margin-top:20px;padding-top:8px;border-top:1px solid #d5dde6;color:#889;font-size:10px;text-align:center}
+    @media print{
+      body{padding:0}
+      @page{margin:14mm}
+      .page-break{page-break-before:always;break-before:page}
+      .rep-block{page-break-inside:auto}
+      thead{display:table-header-group}
+      tbody tr{page-break-inside:avoid;break-inside:avoid}
+      .rep-sec h2,.rep-num{page-break-after:avoid;break-after:avoid}
+    }
+  </style></head><body>
+    <div class="rep-head"><h1>${esc(title)}</h1><div class="meta">${esc(meta)}</div></div>
+    ${bodyHtml}
+    <div class="rep-foot">${esc(PARISH.name)} · 2027 서울 WYD 본당 관리 · 본 문서는 앱에서 자동 생성되었습니다.</div>
+    <script>window.onload=function(){setTimeout(function(){window.print();},300);};<\/script>
+  </body></html>`);
+  w.document.close();
+}
+// 헤더 우측 내보내기 버튼 묶음
+function exportBtns(key){
+  const pick=PRINT_PICKERS[key]?`<button class="btn" style="white-space:nowrap" onclick="openPrintPicker('${key}')">🖨 선택 인쇄</button>`:"";
+  const paste=(PASTE_DEFS[key]&&canEdit())?`<button class="btn" style="white-space:nowrap" onclick="openPasteModal('${key}')">📋 엑셀 붙여넣기</button>`:"";
+  return `<div style="display:flex;gap:6px;flex-wrap:wrap">
+    <button class="btn" style="white-space:nowrap" onclick="downloadCSV('${key}')">⬇ 엑셀(CSV)</button>
+    <button class="btn" style="white-space:nowrap" onclick="printOne('${key}')">🖨 전체 인쇄</button>
+    ${pick}
+    ${paste}
+  </div>`;
+}
+// 4대 명단 종합 CSV (섹션 헤더로 구분, 한 파일)
+function downloadAllCSV(){
+  const D=exportDefs();
+  const order=[["visitors","①"],["homestays","②"],["tasks","③"],["facilities","④"]];
+  const parts=[];
+  order.forEach(([k,no])=>{
+    const d=D[k], rows=d.rows();
+    parts.push(csvCell(no+" "+d.title+" ("+rows.length+"건)"));
+    parts.push(d.cols.map(c=>csvCell(c.h)).join(","));
+    rows.forEach(r=>parts.push(d.cols.map(c=>csvCell(c.g(r))).join(",")));
+    parts.push(""); // 섹션 사이 빈 줄
+  });
+  const csv="\uFEFF"+parts.join("\r\n");
+  const blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url; a.download=`${PARISH.name}_WYD_종합명단_${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+// 공통 집계 (대시보드·각 탭 일치)
+function totals(){
+  const v=state.data.visitors, total=v.length;
+  const cap=PARISH.capacity, rate=Math.round(total/cap*100), over=total>cap;
+  const changing=v.filter(x=>x.status==="변동중").length;
+  const gap=TASKCATS.filter(t=>t.assigned<t.min+t.reserve);
+  const unmatched=state.data.homestays.filter(h=>!derivedMatch(h.host)&&(!h.match||h.match==="—")).length;
+  return {total,cap,rate,over,changing,gap,unmatched};
+}
+
+function viewDash(){
+  const T=totals();
+  const m=(l,v,c)=>`<div class="metric"><div class="l">${l}</div><div class="v" style="color:${c||'var(--ink)'}">${v}</div></div>`;
+  // D-DAY 계산
+  const _today=new Date(), _open=new Date(WYD_OPEN+"T00:00:00"), _dio=new Date(WYD_DIOCESE+"T00:00:00");
+  const dday=Math.ceil((_open-_today)/(1000*60*60*24));
+  const ddayDio=Math.ceil((_dio-_today)/(1000*60*60*24));
+  const ddText=dday>0?("D-"+dday):(dday===0?"D-DAY":("D+"+(-dday)));
+
+  // 1) 시설 현황: 가용/총 + 상태별 시설명
+  const facAll=state.data.facilities;
+  const facTotal=facAll.length;
+  const facBy=(st)=>facAll.filter(f=>f.status===st);
+  const facAvailList=facBy("가용"), facUseList=facBy("사용중"), facCheckList=facBy("점검중");
+  const facAvail=facAvailList.length, facUse=facUseList.length, facCheck=facCheckList.length;
+  const facLine=(label,list,tone)=>`<div style="padding:7px 0;border-bottom:1px solid var(--line)">
+    <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px"><span>${label}</span>${badge(list.length+(label==="가용"?" / "+facTotal:"개"),tone)}</div>
+    ${list.length?`<div style="font-size:12px;color:var(--sub);margin-top:3px">${list.map(f=>esc(f.name)).join(", ")}</div>`:""}
+  </div>`;
+
+  // 2) 봉사자 분과별 인원 집계 / 적정 인원
+  //    적정 인원 기준: 분과별 목표치(없으면 기본 2명)
+  const DEPT_TARGET={"WYD분과":6,"시설분과":6,"사회사목분과":4,"전례분과":3,"안내":4};
+  const byDept={}; state.data.volunteers.forEach(v=>{byDept[v.dept]=(byDept[v.dept]||0)+1;});
+  const depts=state.data.departments.slice().sort((a,b)=>(a.order||0)-(b.order||0));
+  const deptRows=depts.map(d=>{
+    const cur=byDept[d.name]||0, target=DEPT_TARGET[d.name]||2, short=cur<target;
+    return `<div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:6px 0;border-bottom:1px solid var(--line)">
+      <span>${esc(d.name)}</span>${badge(cur+" / "+target+"명",short?'red':'green')}</div>`;
+  }).join("");
+  const shortDepts=depts.filter(d=>(byDept[d.name]||0)<(DEPT_TARGET[d.name]||2)).length;
+
+  // 3) 방문자 국가별 / 총 인원
+  const byCountry={}; state.data.visitors.forEach(v=>{byCountry[v.country]=(byCountry[v.country]||0)+1;});
+  const countryRows=Object.entries(byCountry).sort((a,b)=>b[1]-a[1]).map(([c,n])=>{
+    return `<div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--line)"><span>${esc(c)}</span><b>${num(n)}명</b></div>`;
+  }).join("");
+
+  // 4) 오늘의 준비사항 (일정 첫 3개)
+  const prepRows=state.data.schedule.slice(0,3).map(e=>`<div style="font-size:13px;padding:6px 0;border-bottom:1px solid var(--line)"><span style="color:var(--blue);font-weight:600">${esc(e.date)}</span> ${esc(e.event)}<div style="color:var(--sub);font-size:12px;margin-top:2px">${esc(e.prep)}</div></div>`).join("");
+
+  return `<div class="sec-row"><div><h2 class="sec">대시보드</h2><p class="sec-sub">중계양업성당 운영 현황 · 아래 수치는 각 탭과 동일한 데이터에서 산출</p></div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <button class="btn" style="white-space:nowrap" onclick="downloadAllCSV()">⬇ 종합 엑셀(CSV)</button>
+      <button class="btn btn-primary" style="white-space:nowrap" onclick="printAll()">🖨 종합 보고서 PDF·인쇄</button>
+    </div></div>`+`
+  <div style="margin-bottom:16px">
+    <div class="card" style="display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:var(--blueBg);border-color:var(--blue);max-width:420px">
+      <div style="font-size:12.5px;color:var(--blue);font-weight:600">2027 서울 WYD 개막까지</div>
+      <div style="font-size:34px;font-weight:700;color:var(--blue);line-height:1.1;margin:4px 0">${ddText}</div>
+      <div style="font-size:12px;color:var(--sub)">개막미사 8/3 · 교구대회 ${ddayDio>0?"D-"+ddayDio:(ddayDio===0?"D-DAY":"D+"+(-ddayDio))}</div>
+      ${(()=>{const g=state.data.gori||[];const todayIso=new Date().toISOString().slice(0,10);const today=g.find(x=>x.date===todayIso);
+        return today?`<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--blue);width:100%"><div style="font-size:11px;color:var(--blue);font-weight:600">🙏 오늘의 고리기도</div><div style="font-size:14px;font-weight:700;margin-top:2px">${esc(today.org)}</div><div style="font-size:11.5px;color:var(--sub)">${esc(today.rep)}</div></div>`:"";})()}
+      <button class="link" onclick="go('prep')" style="margin-top:8px">D-DAY 준비 일정 ›</button>
+    </div>
+  </div>
+  ${T.over?`<div class="warn">⚠ <div><b style="color:var(--red)">수용 정원 초과</b> — 배정 ${num(T.total)}명 / 교리실 수용 추정 ${num(T.cap)}명. 홈스테이 분산 또는 F.O.C. 조율 필요.</div></div>`:""}
+
+  <div style="margin-top:20px">
+    <div style="font-weight:700;margin-bottom:10px;font-size:15px">바로가기 <span style="font-weight:400;color:var(--sub);font-size:12.5px">Quick Menu · 각 메뉴 요약 · 누르면 이동</span></div>
+    <div class="dash-nav-grid">
+      ${NAV.filter(n=>n.id!=="dash"&&ROLES[state.role].mods.includes(n.id)).map(n=>{
+        const info=dashNavInfo(n.id);
+        return `<button class="dash-nav-card" onclick="go('${n.id}')">
+          <div class="dnc-head">
+            <span class="dni-ico">${n.icon}</span>
+            <span class="dni-txt"><span class="dni-ko">${esc(n.label)}</span><span class="dni-en">${esc(n.en||"")}</span></span>
+            ${info.badge?`<span class="dni-cnt ${info.tone||''}">${esc(info.badge)}</span>`:""}
+          </div>
+          ${info.summary?`<div class="dnc-summary">${info.summary}</div>`:""}
+          ${info.items&&info.items.length?`<div class="dnc-items">${info.items.map(it=>`<div class="dnc-item">${it}</div>`).join("")}</div>`:""}
+          <span class="dnc-go">이동 ›</span>
+        </button>`;
+      }).join("")}
+    </div>
+  </div>`;
+}
+// 각 탭의 요약 정보 (배지 + 요약 + 상세 항목 목록)
+function dashNavInfo(id){
+  const d=state.data, T=totals();
+  const e=(s)=>esc(String(s==null?"":s));
+  try{
+    if(id==="prep"){const list=d.prep||[];const done=list.filter(x=>x.done).length,tot=list.length||16;
+      const next=list.filter(x=>!x.done).slice(0,5).map(x=>e(x.title||x.step||x.label||""));
+      return {badge:done+"/"+tot,summary:"D-DAY 준비 "+tot+"단계 중 "+done+"단계 완료",tone:done>=tot?'':'amber',
+        items:next.length?next.map(t=>"◦ "+t):["◦ 모든 단계 완료"]};}
+    if(id==="gori"){const g=(d.gori||[]).slice().sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+      const todayIso=new Date().toISOString().slice(0,10);const t=g.find(x=>x.date===todayIso);
+      const up=g.filter(x=>x.date>=todayIso).slice(0,5);
+      const fmt=(dt)=>{const o=new Date(dt+"T00:00:00");return (o.getMonth()+1)+"/"+o.getDate();};
+      return {badge:g.length+"일",summary:t?("오늘: "+e(t.org)+" · "+e(t.rep)):(g.length?"배정 기간 "+(g.length?fmt(g[0].date)+"~"+fmt(g[g.length-1].date):""):"미등록"),
+        items:up.map(x=>fmt(x.date)+" "+e(x.org))};}
+    if(id==="org"){const deps=(d.departments||[]).slice(0,6).map(x=>e(x.name));
+      return {badge:(d.departments||[]).length+"분과",summary:"분과·구역 조직 구성",items:deps.map(x=>"◦ "+x)};}
+    if(id==="schedule"){const s=d.schedule||[];const up=s.slice(0,3).map(x=>e(x.date)+" "+e(x.event||""));
+      return {badge:s.length+"건",summary:s.length?"교구대회·본대회 일정":"일정 없음",items:up};}
+    if(id==="facility"){const f=d.facilities||[];const av=f.filter(x=>x.status==="가용").length;
+      const use=f.filter(x=>x.status==="사용중").map(x=>e(x.name)).slice(0,4);
+      return {badge:av+"/"+f.length,summary:"가용 "+av+" · 사용중 "+f.filter(x=>x.status==="사용중").length+" · 전체 "+f.length,tone:av?'':'red',
+        items:use.length?["사용중: "+use.join(", ")]:[]};}
+    if(id==="tasks"){const v=d.volunteers||[];const byDept={};v.forEach(x=>{byDept[x.dept]=(byDept[x.dept]||0)+1;});
+      const top=Object.entries(byDept).slice(0,6).map(([k,n])=>e(k)+" "+n);
+      return {badge:v.length+"명",summary:"봉사자 "+v.length+"명 · "+Object.keys(byDept).length+"개 분과",items:top.map(x=>"◦ "+x)};}
+    if(id==="homestay"){const h=d.homestays||[];const un=T.unmatched||0;
+      const names=h.slice(0,6).map(x=>e(x.host));
+      return {badge:h.length+"가정",summary:"등록 "+h.length+"가정"+(un?" · 미매칭 "+un:" · 매칭 완료"),tone:un?'amber':'',
+        items:names.map(x=>"◦ "+x)};}
+    if(id==="people"){const v=d.visitors||[];const bc={};v.forEach(x=>{bc[x.country]=(bc[x.country]||0)+1;});
+      const cs=Object.entries(bc).slice(0,6).map(([k,n])=>e(k)+" "+n);
+      return {badge:v.length+"명",summary:Object.keys(bc).length+"개국 "+v.length+"명 방문 예정",items:cs.map(x=>"◦ "+x)};}
+    if(id==="notices"){const n=d.notices||[];const top=n.slice(0,3).map(x=>e(x.title||x.content||""));
+      return {badge:n.length+"건",summary:n.length?"공지사항":"공지 없음",items:top.map(x=>"◦ "+x)};}
+    if(id==="posts"){const p=d.posts||[];const top=p.slice(0,3).map(x=>e(x.title||""));
+      return {badge:p.length+"건",summary:p.length?"게시판 글":"게시글 없음",items:top.map(x=>"◦ "+x)};}
+    if(id==="qna"){const q=d.qna||[];const un=q.filter(x=>!x.answered);
+      const top=(un.length?un:q).slice(0,3).map(x=>e(x.q||""));
+      return {badge:q.length+"건",summary:un.length?("미답변 "+un.length+"건 대기"):"모두 답변 완료",tone:un.length?'red':'',
+        items:top.map(x=>"◦ "+x)};}
+    if(id==="places"){const p=d.places||[];const bc={};p.forEach(x=>{bc[x.cat]=(bc[x.cat]||0)+1;});
+      const cs=Object.entries(bc).map(([k,n])=>e(k)+" "+n);
+      return {badge:p.length+"곳",summary:"추천 장소·지도 "+p.length+"곳",items:cs.slice(0,4).map(x=>"◦ "+x)};}
+  }catch(e2){}
+  return {badge:"",summary:"",items:[]};
+}
+
+// D-DAY 준비 — 카운트다운 + 기간별 사전 준비 일정
+function viewPrep(){
+  const today=new Date();
+  const open=new Date(WYD_OPEN+"T00:00:00");
+  const dio=new Date(WYD_DIOCESE+"T00:00:00");
+  const dday=Math.ceil((open-today)/(1000*60*60*24));
+  const ddayDio=Math.ceil((dio-today)/(1000*60*60*24));
+  const list=state.data.prep||[];
+  const doneN=list.filter(p=>p.done===true||p.done==="true").length;
+  const pct=list.length?Math.round(doneN/list.length*100):0;
+  const ddText=dday>0?("D-"+dday):(dday===0?"D-DAY":("D+"+(-dday)));
+  const rows=list.map(p=>{
+    const done=(p.done===true||p.done==="true");
+    return `<div class="card" style="padding:12px 14px;${done?'opacity:.62':''}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
+        <div style="min-width:0">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <span class="chkbox${done?' on':''}" ${canEdit()?`onclick="togglePrep(${p.id})"`:""} style="${canEdit()?'':'cursor:default'}">${done?'✓':''}</span>
+            ${badge(p.phase,'blue')}<b style="font-size:14px">${esc(p.title)}</b></div>
+          <div style="font-size:12.5px;color:var(--sub);margin-top:5px;margin-left:30px">${esc(p.detail||"")}</div>
+          ${p.ref?`<div style="font-size:11px;color:var(--blue);margin-top:4px;margin-left:30px">📖 ${esc(p.ref)}</div>`:""}
+        </div>
+        ${canEdit()?`<div style="display:flex;gap:4px;flex-shrink:0">${rowActions('prep',p.id)}</div>`:""}
+      </div></div>`;}).join("");
+  return secHead("D-DAY 준비 일정","2027 서울 WYD 개막(8/3)까지 기간별 사전 준비 · 매뉴얼 준비편·기도의 날 기반","prep")+`
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-bottom:16px">
+    <div class="metric"><div class="l">본대회 개막까지</div><div class="v" style="color:var(--blue)">${ddText}</div></div>
+    <div class="metric"><div class="l">교구대회까지 (7/29)</div><div class="v">${ddayDio>0?"D-"+ddayDio:(ddayDio===0?"D-DAY":"D+"+(-ddayDio))}</div></div>
+    <div class="metric"><div class="l">준비 진행률</div><div class="v" style="color:${pct===100?'var(--green)':'var(--amber)'}">${pct}%</div></div>
+    <div class="metric"><div class="l">완료 / 전체 단계</div><div class="v">${doneN} / ${list.length}</div></div>
+  </div>
+  <div style="height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:18px"><div style="height:100%;width:${pct}%;background:var(--green)"></div></div>
+  <div class="grid" style="grid-template-columns:1fr;gap:10px">${rows||'<div style="color:var(--sub)">등록된 준비 단계가 없습니다.</div>'}</div>
+  <p style="font-size:12px;color:var(--sub);margin-top:12px">※ 시기·항목은 본당 상황에 맞게 추가·수정하세요. 체크박스로 완료 표시가 됩니다.</p>`;
+}
+function togglePrep(id){
+  const p=state.data.prep.find(x=>String(x.id)===String(id));
+  p.done=!(p.done===true||p.done==="true"); apiWrite('prep',p); render();
+}
+
+// 인원관리 — 방문자(순례자) + 명단(이름·연락처 최소 2명)
+function viewPeople(){
+  const T=totals(), v=state.data.visitors;
+  // 언어별 인원(개인 수)
+  const lang={}; v.forEach(x=>lang[x.lang]=(lang[x.lang]||0)+1);
+  const chips=Object.entries(lang).sort((a,b)=>b[1]-a[1]).map(([l,n])=>badge(l+" "+num(n)+"명",'gray')).join("");
+  // 국가 수
+  const nCountry=new Set(v.map(x=>x.country)).size;
+
+  const sort=state.visSort||{key:"pid",dir:1};
+  const groupBy=state.visGroup||"none"; // none / gno / country / stayplace
+  const sorted=v.slice().sort((a,b)=>{
+    let x=a[sort.key],y=b[sort.key];
+    return String(x==null?"":x).localeCompare(String(y==null?"":y),"ko")*sort.dir;
+  });
+  const stayText=(x)=>x.room?x.room:x.homestay?("홈: "+x.homestay):"미배정";
+  const stayCell=(x)=>x.room?badge(x.room,'blue'):x.homestay?badge("홈 "+esc(x.homestay),'amber'):'<span style="color:var(--amber)">미배정</span>';
+
+  const cols=[["pid","번호"],["gno","그룹"],["name","이름"],["sex","성별"],["country","국가"],["lang","언어"],["room","숙박 장소"],["stay","기간"],["role","역할"],["status","상태"],["note","비고"]];
+  const th=cols.map(([k,l])=>{const on=sort.key===k;const arrow=on?(sort.dir>0?" ▲":" ▼"):"";
+    return `<th style="cursor:pointer;user-select:none" onclick="sortVis('${k}')">${l}${arrow}</th>`;}).join("")
+    +`<th>연락처</th>`+(canEdit()?"<th>관리</th>":"");
+  const rowHtml=(x)=>`<tr>
+    <td data-label="번호" style="font-weight:600;white-space:nowrap">${esc(x.pid||"—")}</td>
+    <td data-label="그룹">${badge(x.gno||"—",'blue')}</td>
+    <td data-label="이름" style="font-weight:600;white-space:nowrap">${esc(x.name)}</td>
+    <td data-label="성별">${x.sex?badge(x.sex,x.sex==="남"?'blue':'amber'):"—"}</td>
+    <td data-label="국가" style="white-space:nowrap">${esc(x.country)}</td>
+    <td data-label="언어" style="white-space:nowrap">${esc(x.lang)}</td>
+    <td data-label="숙박 장소" style="min-width:130px">${stayCell(x)}</td>
+    <td data-label="기간" style="white-space:nowrap">${esc(x.stay)}</td>
+    <td data-label="역할">${x.role?badge(x.role,'green'):"—"}</td>
+    <td data-label="상태">${badge(x.status,x.status==="변동중"?'amber':'green')}</td>
+    <td data-label="비고" style="color:var(--sub);min-width:100px">${esc(x.note||"")||"—"}</td>
+    <td data-label="연락처" style="white-space:nowrap"><a href="tel:${esc(x.tel)}">${esc(x.tel)}</a></td>
+    ${canEdit()?`<td data-label="관리" style="white-space:nowrap">${rowActions('visitors',x.id)}</td>`:""}</tr>`;
+
+  let tableBody;
+  if(groupBy==="none"){
+    tableBody=`<tbody>${sorted.map(rowHtml).join("")}</tbody>`;
+  }else{
+    // 그룹화: 키별로 묶어 소제목 행 + 인원 행
+    const groups={}; sorted.forEach(x=>{const k=visGroupKey(x,groupBy);(groups[k]=groups[k]||[]).push(x);});
+    const colspan=cols.length+1+(canEdit()?1:0);
+    const orderedKeys=visGroupOrder(groupBy).filter(k=>groups[k]);
+    tableBody=`<tbody>${orderedKeys.map(k=>
+      `<tr class="grp-head" style="background:var(--bg)"><td colspan="${colspan}" style="padding:8px 10px">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span style="font-weight:700">${esc(k)}</span><span style="color:var(--sub);font-weight:400;font-size:12px">· ${groups[k].length}명</span>
+          <span style="flex:1;min-width:20px"></span>
+          <button class="btn-sm" onclick="printVisGroup('${esc(groupBy)}','${esc(k)}')">🖨 인쇄</button>
+          <button class="btn-sm" onclick="csvVisGroup('${esc(groupBy)}','${esc(k)}')">⬇ CSV</button>
+        </div></td></tr>`
+      +groups[k].map(rowHtml).join("")
+    ).join("")}</tbody>`;
+  }
+
+  const groupBtns=[["none","그룹화 없음"],["gno","그룹별"],["country","국가별"],["sex","성별"],["lang","언어별"],["stay","기간별"],["status","상태별"],["stayplace","숙소별"]].map(([k,l])=>
+    `<button class="btn" style="padding:6px 12px;${groupBy===k?'background:var(--blue);color:#fff':''}" onclick="setVisGroup('${k}')">${l}</button>`).join("");
+
+  return secHead("방문자(순례자) 명단","1인 1행 · 총 "+num(T.total)+"명 · "+nCountry+"개국 · 열 제목 정렬 · 국가/그룹/숙소별 묶어보기","visitors","visitors")+`
+  <div class="card" style="margin-bottom:14px"><div style="font-weight:600;margin-bottom:10px">🌐 언어별 집계 (소통 담당·통역 배치 기준)</div><div class="chip-row">${chips}</div></div>
+  <div class="sec-row" style="margin-bottom:12px"><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><span style="font-size:12.5px;color:var(--sub)">묶어보기:</span>${groupBtns}</div></div>
+  ${groupBy!=="none"?`<p style="font-size:12px;color:var(--sub);margin:-4px 0 10px">💡 각 ${VIS_GROUP_LABEL[groupBy]||"그룹"} 제목줄의 <b>🖨 이 그룹 인쇄</b> / <b>⬇ CSV</b> 버튼으로 해당 ${VIS_GROUP_LABEL[groupBy]||"그룹"}만 따로 출력할 수 있습니다.</p>`:""}
+  <div class="scroll resp-scroll"><table class="resp resp-vis"><thead><tr>${th}</tr></thead>${tableBody}</table></div>`;
+}
+function setVisGroup(g){ state.visGroup = g; render(); }
+// 그룹화 키 판정 (뷰·프린트 공용)
+function visStayText(x){return x.room?x.room:x.homestay?("홈: "+x.homestay):"미배정";}
+function visGroupKey(x,groupBy){
+  return groupBy==="gno"?(x.gno||"미지정")
+    :groupBy==="country"?(x.country||"미지정")
+    :groupBy==="sex"?(x.sex?x.sex+"성":"성별 미입력")
+    :groupBy==="lang"?(x.lang||"언어 미입력")
+    :groupBy==="stay"?(x.stay||"기간 미입력")
+    :groupBy==="status"?(x.status||"상태 미입력")
+    :visStayText(x);
+}
+const VIS_GROUP_LABEL={gno:"그룹",country:"국가",sex:"성별",lang:"언어",stay:"기간",status:"상태",stayplace:"숙소"};
+// 현재 화면 정렬(state.visSort) 기준으로 정렬된 방문자 배열
+function visSortedVisitors(){
+  const sort=state.visSort||{key:"pid",dir:1};
+  return state.data.visitors.slice().sort((a,b)=>{
+    if(sort.key==="role")return 0;
+    return String(a[sort.key]==null?"":a[sort.key]).localeCompare(String(b[sort.key]==null?"":b[sort.key]),"ko")*sort.dir;
+  });
+}
+// 그룹 키 순서: 정렬된 방문자에서 그룹 키가 처음 등장하는 순서 (화면 묶어보기와 동일)
+function visGroupOrder(groupBy){
+  const seen=[]; visSortedVisitors().forEach(x=>{const k=visGroupKey(x,groupBy);if(seen.indexOf(k)<0)seen.push(k);});
+  return seen;
+}
+// 선택 그룹의 방문자만 뽑아 프린트/CSV (뷰 내 그룹 헤더 버튼용)
+function visGroupRows(groupBy,key){
+  return visSortedVisitors().filter(x=>visGroupKey(x,groupBy)===key);
+}
+function printVisGroup(groupBy,key){
+  const d=exportDefs().visitors;
+  const rows=visGroupRows(groupBy,key);
+  const label=VIS_GROUP_LABEL[groupBy]||"그룹";
+  const title=PARISH.name+" 방문자 명단 · "+label+" ["+key+"]";
+  const sub={title, cols:d.cols, rows:()=>rows};
+  openPrintWindow(title, `<div class="rep-sub">${label} 기준 · 총 ${rows.length}명</div>`+printTable(sub));
+}
+function csvVisGroup(groupBy,key){
+  const d=exportDefs().visitors;
+  const rows=visGroupRows(groupBy,key);
+  const head=d.cols.map(c=>csvCell(c.h)).join(",");
+  const body=rows.map(r=>d.cols.map(c=>csvCell(c.g(r))).join(","));
+  const csv="\uFEFF"+[head,...body].join("\r\n");
+  const blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url; a.download=`${PARISH.name}_방문자_${(VIS_GROUP_LABEL[groupBy]||"그룹")}_${key}_${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+// ══ 범용 선택 인쇄 피커 (방문자·봉사자·홈스테이) ══
+// 각 명단의 묶음 기준(groupers) + 키 판정/순서/행 추출을 설정으로 정의
+const PRINT_PICKERS={
+  visitors:{
+    label:"방문자",exportKey:"visitors",
+    groupers:[["gno","그룹"],["country","국가"],["sex","성별"],["lang","언어"],["stay","기간"],["status","상태"],["stayplace","숙소"]],
+    defaultBy:"gno",
+    keyOf:(x,by)=>visGroupKey(x,by),
+    order:(by)=>visGroupOrder(by),
+    rows:(by,key)=>visGroupRows(by,key),
+    unit:"명"
+  },
+  tasks:{
+    label:"봉사자",exportKey:"tasks",
+    groupers:[["dept","분과"],["team","팀"]],
+    defaultBy:"dept",
+    keyOf:(x,by)=>by==="dept"?(x.dept||"미지정"):(x.team||"미지정"),
+    order:(by)=>{const seen=[];volSortedForPrint().forEach(x=>{const k=by==="dept"?(x.dept||"미지정"):(x.team||"미지정");if(seen.indexOf(k)<0)seen.push(k);});return seen;},
+    rows:(by,key)=>volSortedForPrint().filter(x=>(by==="dept"?(x.dept||"미지정"):(x.team||"미지정"))===key),
+    unit:"명"
+  },
+  homestays:{
+    label:"홈스테이",exportKey:"homestays",
+    groupers:[["zone","구역"],["zoneApt","단지"]],
+    defaultBy:"zone",
+    keyOf:(h,by)=>by==="zone"?(h.zone||"미지정"):(zoneApt(h.zone)||"미지정"),
+    order:(by)=>{const seen=[];hsSortedForPrint().forEach(h=>{const k=by==="zone"?(h.zone||"미지정"):(zoneApt(h.zone)||"미지정");if(seen.indexOf(k)<0)seen.push(k);});return seen;},
+    rows:(by,key)=>hsSortedForPrint().filter(h=>(by==="zone"?(h.zone||"미지정"):(zoneApt(h.zone)||"미지정"))===key),
+    unit:"가정"
+  }
+};
+// 봉사자·홈스테이 프린트 정렬 (화면 정렬 반영)
+function volSortedForPrint(){
+  const sort=state.volSort||{key:"dept",dir:1};
+  return state.data.volunteers.slice().sort((a,b)=>String(a[sort.key]==null?"":a[sort.key]).localeCompare(String(b[sort.key]==null?"":b[sort.key]),"ko")*sort.dir);
+}
+function hsSortedForPrint(){
+  const sort=state.hsSort||{key:"hid",dir:1};
+  return state.data.homestays.slice().sort((a,b)=>{
+    if(sort.key==="zoneApt")return String(zoneApt(a.zone)).localeCompare(String(zoneApt(b.zone)),"ko")*sort.dir;
+    return String(a[sort.key]==null?"":a[sort.key]).localeCompare(String(b[sort.key]==null?"":b[sort.key]),"ko")*sort.dir;
+  });
+}
+function openPrintPicker(pkey){
+  const P=PRINT_PICKERS[pkey]; if(!P)return;
+  const stKey="printBy_"+pkey;
+  const by=state[stKey]||P.defaultBy;
+  const rowsAll=exportDefs()[P.exportKey].rows(); // 전체(카운트용)
+  const counts={}; (P.exportKey==="visitors"?state.data.visitors:P.exportKey==="tasks"?state.data.volunteers:state.data.homestays)
+    .forEach(x=>{const k=P.keyOf(x,by);counts[k]=(counts[k]||0)+1;});
+  const keys=P.order(by).filter(k=>counts[k]);
+  const byBtns=P.groupers.map(([k,l])=>
+    `<button class="btn-sm" style="${by===k?'background:var(--blue);color:#fff':''}" onclick="setPrintBy('${pkey}','${k}')">${l}</button>`).join(" ");
+  const checks=keys.map(k=>`<label style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--line);cursor:pointer">
+    <input type="checkbox" class="print-pick-chk" value="${esc(k)}" checked style="width:17px;height:17px">
+    <span style="font-weight:600">${esc(k)}</span><span style="color:var(--sub);font-size:12.5px">· ${counts[k]}${P.unit}</span></label>`).join("");
+  $("modalRoot").innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal">
+    <h3>${P.label} 선택 인쇄</h3>
+    <p style="font-size:12.5px;color:var(--sub);margin:0 0 10px">묶음 기준을 고르고, 인쇄할 항목을 선택하세요. 선택한 항목만 한 문서로 인쇄됩니다.</p>
+    <div style="font-size:12px;color:var(--sub);margin-bottom:4px">묶음 기준</div>
+    <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px">${byBtns}</div>
+    <div style="display:flex;gap:8px;margin-bottom:6px">
+      <button class="btn-sm" onclick="printPickCheckAll(true)">전체 선택</button>
+      <button class="btn-sm" onclick="printPickCheckAll(false)">전체 해제</button>
+    </div>
+    <div style="max-height:280px;overflow-y:auto;margin-bottom:8px">${checks||'<div style="color:var(--sub);padding:10px 0">항목이 없습니다.</div>'}</div>
+    <div class="modal-actions"><button class="btn" onclick="closeModal()">취소</button>
+      <button class="btn btn-primary" onclick="printPickerSelected('${pkey}')">🖨 선택 항목 인쇄</button></div>
+  </div></div>`;
+}
+function setPrintBy(pkey,by){ state["printBy_"+pkey]=by; openPrintPicker(pkey); }
+function printPickCheckAll(on){ document.querySelectorAll(".print-pick-chk").forEach(c=>c.checked=on); }
+function printPickerSelected(pkey){
+  const P=PRINT_PICKERS[pkey]; if(!P)return;
+  const by=state["printBy_"+pkey]||P.defaultBy;
+  const pickedSet=new Set([...document.querySelectorAll(".print-pick-chk")].filter(c=>c.checked).map(c=>c.value));
+  if(!pickedSet.size){alert("인쇄할 항목을 하나 이상 선택하세요.");return;}
+  const picked=P.order(by).filter(k=>pickedSet.has(k));
+  const d=exportDefs()[P.exportKey];
+  const g=P.groupers.find(g=>g[0]===by); const label=g?g[1]:"그룹";
+  const secs=picked.map((k,i)=>{
+    const rows=P.rows(by,k);
+    const sub={title:label+" ["+k+"]", cols:d.cols, rows:()=>rows};
+    return `<div class="rep-block ${i>0?'page-break':''}"><div class="rep-num">${label} · ${esc(k)}</div>${printTable(sub)}</div>`;
+  }).join("");
+  const total=picked.reduce((s,k)=>s+P.rows(by,k).length,0);
+  const title=PARISH.name+" "+P.label+" 명단 · "+label+" 선택 인쇄";
+  closeModal();
+  openPrintWindow(title, `<div class="rep-sub">${label} 기준 · 선택 ${picked.length}개 · 총 ${total}${P.unit} (${picked.map(esc).join(", ")})</div>`+secs);
+}
+// 공지사항
+function viewNotices(){
+  const fmt=(s)=>esc(s||"");
+  const notices=(state.data.notices||[]).slice().sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+  const cards=notices.length?notices.map(n=>`<div class="card" style="padding:12px 14px;border-left:3px solid var(--blue)">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+      <div style="min-width:0"><div style="font-weight:700;font-size:14.5px">${fmt(n.title)}</div>
+        <div style="font-size:11.5px;color:var(--sub);margin-top:2px">${fmt(n.date)} · ${fmt(n.author)}</div></div>
+      ${canEdit()?`<div style="display:flex;gap:4px;flex-shrink:0">${rowActions('notices',n.id)}</div>`:""}</div>
+    <div style="font-size:13px;margin-top:8px;white-space:pre-wrap">${fmt(n.body)}</div></div>`).join("")
+    :`<div style="color:var(--sub);font-size:13px">등록된 공지가 없습니다.</div>`;
+  return secHead("공지사항","본당·분과 공지 (관리자 작성) · 최신순","notices")+`
+  <div class="grid" style="grid-template-columns:1fr;gap:10px">${cards}</div>`;
+}
+// 게시판
+function viewPosts(){
+  const fmt=(s)=>esc(s||"");
+  const posts=(state.data.posts||[]).slice().sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+  const cards=posts.length?posts.map(p=>`<div class="card" style="padding:12px 14px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+      <div style="min-width:0"><div style="font-weight:600;font-size:14px">${fmt(p.title)}</div>
+        <div style="font-size:11.5px;color:var(--sub);margin-top:2px">${fmt(p.date)} · ${fmt(p.author)}</div></div>
+      ${canEdit()?`<div style="display:flex;gap:4px;flex-shrink:0">${rowActions('posts',p.id)}</div>`:""}</div>
+    <div style="font-size:13px;margin-top:8px;white-space:pre-wrap">${fmt(p.body)}</div></div>`).join("")
+    :`<div style="color:var(--sub);font-size:13px">등록된 글이 없습니다.</div>`;
+  return secHead("게시판","봉사자 자유 게시판 · 작성자 이름을 직접 입력","posts")+`
+  <div class="grid" style="grid-template-columns:1fr;gap:10px">${cards}</div>`;
+}
+// 방문자 Q&A (Pilgrim Q&A) — 누구나 질문, 관리자가 답변
+function viewQna(){
+  const fmt=(s)=>esc(s||"");
+  const qna=(state.data.qna||[]).slice().sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+  const cards=qna.length?qna.map(item=>{
+    const answered=(item.answered===true||item.answered==="true")&&(item.a||"").trim();
+    return `<div class="card" style="padding:12px 14px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+      <div style="min-width:0">
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">${badge("질문",'amber')}<b style="font-size:14px">${fmt(item.author)}</b>
+          <span style="font-size:11.5px;color:var(--sub)">${fmt(item.date)}</span>${answered?badge("답변완료",'green'):badge("답변대기",'gray')}</div>
+        <div style="font-size:13px;margin-top:6px;white-space:pre-wrap">${fmt(item.q)}</div>
+      </div>
+      <div style="display:flex;gap:4px;flex-shrink:0">
+        ${canEdit()?`<button class="btn-sm" onclick="answerQna(${item.id})">${answered?'답변 수정':'답변'}</button>`:""}
+        ${canEdit()?rowActions('qna',item.id):""}</div>
+    </div>
+    ${answered?`<div style="margin-top:10px;padding:9px 11px;background:var(--blueBg);border-radius:8px">
+      <div style="font-size:11.5px;color:var(--blue);font-weight:600;margin-bottom:3px">본당 답변 · Parish reply</div>
+      <div style="font-size:13px;white-space:pre-wrap">${fmt(item.a)}</div></div>`:""}
+    </div>`;}).join("")
+    :`<div style="color:var(--sub);font-size:13px">등록된 질문이 없습니다. / No questions yet.</div>`;
+  return `<div class="sec-row"><div><h2 class="sec">방문자 Q&amp;A (Pilgrim Q&amp;A)</h2><p class="sec-sub">순례자 질문 → 본당 답변 · 질문은 누구나, 답변은 관리자 · Ask a question anytime</p></div><button class="btn btn-primary" onclick="openAdd('qna')">＋ 질문하기 / Ask</button></div>
+  <div class="grid" style="grid-template-columns:1fr;gap:10px">${cards}</div>`;
+}
+// 방문자 질문에 답변 (관리자)
+function answerQna(id){
+  const item=state.data.qna.find(x=>String(x.id)===String(id)); if(!item)return;
+  $("modalRoot").innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal">
+    <h3>답변 작성</h3>
+    <div style="font-size:12.5px;color:var(--sub);margin-bottom:4px">${esc(item.author)} · ${esc(item.date)}</div>
+    <div style="font-size:13px;background:var(--bg);padding:8px 10px;border-radius:6px;margin-bottom:12px;white-space:pre-wrap">${esc(item.q)}</div>
+    <label style="font-size:12.5px;font-weight:600">본당 답변</label>
+    <textarea id="qna_a" rows="4" style="width:100%;margin-top:4px">${esc(item.a||"")}</textarea>
+    <div class="modal-actions"><button class="btn" onclick="closeModal()">취소</button><button class="btn btn-primary" onclick="saveQnaAnswer(${item.id})">저장</button></div>
+  </div></div>`;
+}
+function saveQnaAnswer(id){
+  const item=state.data.qna.find(x=>String(x.id)===String(id)); if(!item)return;
+  item.a=($("qna_a")||{}).value||""; item.answered=item.a.trim()?true:false;
+  apiWrite('qna',item); closeModal(); render();
+}
+function sortVis(key){
+  const cur=state.visSort||{key:"pid",dir:1};
+  state.visSort = cur.key===key ? {key,dir:-cur.dir} : {key,dir:1};
+  render();
+}
+
+// 조직도 — 임원 노드 + 분과·구역 표 + 봉사자 표 (모두 정렬)
+function viewOrg(){
+  const officerNode=(o)=>`<div class="org-node">
+    <div style="font-size:11px;font-weight:600;color:var(--sub)">${esc(o.slot)}</div>
+    <div style="font-size:14px;font-weight:600">${esc(o.name)}</div>
+    ${o.tel?`<div style="font-size:11px"><a href="tel:${esc(o.tel)}" style="color:var(--blue)">${esc(o.tel)}</a></div>`:""}
+    ${o.note?`<div style="font-size:11px;color:var(--sub);margin-top:2px">${esc(o.note)}</div>`:""}
+    ${canEdit()?`<div style="margin-top:6px"><button class="btn-sm" onclick="openEdit('officers',${o.id})">편집</button></div>`:""}
+  </div>`;
+  const offs=state.data.officers;
+  const head=offs.find(o=>o.slot==="위원장")||offs[0];
+  const rest=offs.filter(o=>o!==head);
+
+  const byDept={}; state.data.volunteers.forEach(vo=>{(byDept[vo.dept]=byDept[vo.dept]||[]).push(vo);});
+  const countOf=(name)=>(byDept[name]||[]).length;
+
+  // ── 분과·구역 표 (분과명+분과장 / 분과원 명단) ──
+  const dsorted=state.data.departments.slice().sort((a,b)=>(a.order||0)-(b.order||0));
+  const dHead=["분과·구역 / 분과장","분과원 명단 (이름·연락처·임무)","관리"];
+  const drows=dsorted.map((dd,di)=>{
+    const isKey=(dd.key===true||dd.key==='true');
+    const list=(byDept[dd.name]||[]);
+    const lead=list.find(v=>v.role==="분과장");
+    const members=list.filter(v=>v.role!=="분과장");
+    // 좌: 분과명 + 임무 + 분과장 이름(전화)
+    const leadHtml=lead
+      ? `<div style="margin-top:4px">${badge("분과장",'amber')} <b>${esc(lead.name)}</b> <span style="color:var(--sub)">(<a href="tel:${esc(lead.tel)}">${esc(lead.tel)}</a>)</span>${showLangs(lead.langs)?" "+badge(showLangs(lead.langs),'green'):""}</div>`
+      : `<div style="margin-top:4px;color:var(--sub);font-size:12.5px">분과장 미지정</div>`;
+    const left=`<div>
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap"><span style="font-size:14.5px;font-weight:700">${esc(dd.name)}</span>${isKey?badge("핵심",'amber'):badge(dd.kind||"분과",dd.kind==="구역"?'gray':'blue')}${badge("분과원 "+members.length+"명",'green')}</div>
+      <div style="font-size:12px;color:var(--sub);margin-top:2px">${esc(dd.task||"")}</div>
+      ${leadHtml}
+    </div>`;
+    // 중: 분과원 명단 (이름(전화) 임무) — 편집/삭제 버튼 없이 깔끔하게
+    const memHtml=members.length
+      ? members.map(m=>`<div style="padding:4px 0;border-bottom:1px solid var(--line);font-size:12.5px">
+          ${badge("분과원",'gray')} <b>${esc(m.name)}</b> <span style="color:var(--sub)">(<a href="tel:${esc(m.tel)}">${esc(m.tel)}</a>)</span>
+          ${m.task?` · ${esc(m.task)}`:""}${showLangs(m.langs)?" "+badge(showLangs(m.langs),'green'):""}
+        </div>`).join("")
+      : `<div style="color:var(--sub);font-size:12.5px">분과원 없음</div>`;
+    const mid=`<div>${memHtml}${canEdit()?`<button class="btn-sm" style="margin-top:6px" onclick="addVolTo('${esc(dd.name)}')">＋ 분과원 추가</button>`:""}</div>`;
+    // 우: 관리 — 순서·분과 편집·삭제 + 봉사자 편집(별도)
+    const ctrl=canEdit()?`<div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
+      <div style="display:flex;gap:4px"><button class="btn-sm" onclick="moveDept(${dd.id},-1)" ${di===0?'disabled style="opacity:.35"':''}>▲ 위</button>
+      <button class="btn-sm" onclick="moveDept(${dd.id},1)" ${di===dsorted.length-1?'disabled style="opacity:.35"':''}>▼ 아래</button></div>
+      <div style="display:flex;gap:4px"><button class="btn-sm" onclick="openEdit('departments',${dd.id})">분과 편집</button>
+      <button class="btn-sm btn-danger" onclick="removeRow('departments',${dd.id})">분과 삭제</button></div>
+      <button class="btn-sm" onclick="manageVols('${esc(dd.name)}')">봉사자 편집</button></div>`:"";
+    return `<tr>
+      <td style="vertical-align:top;min-width:220px">${left}</td>
+      <td style="vertical-align:top;min-width:280px">${mid}</td>
+      ${canEdit()?`<td style="vertical-align:top;white-space:nowrap">${ctrl}</td>`:""}</tr>`;
+  }).join("");
+  const dth=(canEdit()?dHead:dHead.slice(0,2)).map(h=>`<th>${h}</th>`).join("");
+
+  // ── 봉사자 표 (정렬) ──
+  const vsort=state.orgVolSort||{key:"dept",dir:1};
+  const roleRank=r=>(r==="분과장"?0:1);
+  const vsorted=state.data.volunteers.slice().sort((a,b)=>{
+    if(vsort.key==="role")return (roleRank(a.role)-roleRank(b.role))*vsort.dir;
+    return String(a[vsort.key]==null?"":a[vsort.key]).localeCompare(String(b[vsort.key]==null?"":b[vsort.key]),"ko")*vsort.dir;
+  });
+  const vcols=[["role","직책"],["name","이름"],["tel","연락처"],["dept","소속"],["task","담당 임무"],["langs","언어 구사"]];
+  const vth=vcols.map(([k,l])=>{const on=vsort.key===k;const ar=on?(vsort.dir>0?" ▲":" ▼"):"";
+    return `<th style="cursor:pointer;user-select:none" onclick="sortOrgVol('${k}')">${l}${ar}</th>`;}).join("")+(canEdit()?"<th>관리</th>":"");
+  const vrows=vsorted.map(vo=>`<tr>
+    <td data-label="직책">${badge(vo.role||"분과원",vo.role==="분과장"?'amber':'gray')}</td>
+    <td data-label="이름" style="font-weight:600">${esc(vo.name)}</td><td data-label="연락처"><a href="tel:${esc(vo.tel)}">${esc(vo.tel)}</a></td>
+    <td data-label="소속">${badge(vo.dept,'blue')}</td><td data-label="담당 임무">${esc(vo.task||"")}</td><td data-label="언어 구사">${showLangs(vo.langs)?badge(showLangs(vo.langs),'green'):'—'}</td>
+    ${canEdit()?`<td data-label="관리" style="white-space:nowrap">${rowActions('volunteers',vo.id)}</td>`:""}</tr>`).join("");
+
+  const addBtns=canEdit()?`<div style="display:flex;gap:8px"><button class="btn btn-primary" onclick="openAdd('departments')">＋ 분과·구역</button><button class="btn" onclick="openAdd('volunteers')">＋ 봉사자</button></div>`:"";
+
+  return `<div class="sec-row"><div><h2 class="sec">조직도</h2><p class="sec-sub">본당위원회(P.O.C.) · 분과·봉사자 명단식 · 열 제목을 눌러 정렬</p></div>${addBtns}</div>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:20px">
+    ${officerNode(head)}<div class="org-line"></div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">${rest.map(officerNode).join("")}</div>
+  </div>
+  <div style="font-weight:600;margin-bottom:10px">분과·구역 <span style="font-weight:400;color:var(--sub);font-size:12.5px">(분과장·분과원 명단 · ▲위/▼아래로 순서 조정)</span></div>
+  <div class="scroll" style="margin-bottom:24px"><table><thead><tr>${dth}</tr></thead><tbody>${drows}</tbody></table></div>
+  <button class="btn" onclick="toggleAllVols()" style="margin-bottom:${state.showAllVols?'12px':'0'}">${state.showAllVols?'▲ 모든 봉사자 숨기기':'▼ 모든 봉사자 보기 ('+state.data.volunteers.length+'명)'}</button>
+  ${state.showAllVols?`<div class="scroll resp-scroll"><table class="resp"><thead><tr>${vth}</tr></thead><tbody>${vrows}</tbody></table></div>`:""}`;
+}
+function toggleAllVols(){ state.showAllVols=!state.showAllVols; render(); }
+function sortDept(key){const c=state.deptSort||{key:"order",dir:1};state.deptSort=c.key===key?{key,dir:-c.dir}:{key,dir:1};render();}
+function sortOrgVol(key){const c=state.orgVolSort||{key:"dept",dir:1};state.orgVolSort=c.key===key?{key,dir:-c.dir}:{key,dir:1};render();}
+// 특정 분과로 봉사자 추가 (분과 미리 선택된 상태)
+function addVolTo(dept){
+  openModal('volunteers',null);
+  const sel=$("fld_dept"); if(sel)sel.value=dept;
+}
+// 분과 봉사자 관리 모달 (편집·삭제를 한 곳에서)
+function manageVols(dept){
+  const list=state.data.volunteers.filter(v=>v.dept===dept)
+    .sort((a,b)=>(a.role==="분과장"?0:1)-(b.role==="분과장"?0:1));
+  const rows=list.length?list.map(v=>`<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--line)">
+    <div style="min-width:0"><div>${badge(v.role||"분과원",v.role==="분과장"?'amber':'gray')} <b>${esc(v.name)}</b></div>
+      <div style="font-size:12px;color:var(--sub)">${esc(v.tel)}${v.task?" · "+esc(v.task):""}</div></div>
+    <div style="display:flex;gap:4px;flex-shrink:0">
+      <button class="btn-sm" onclick="openEdit('volunteers',${v.id})">편집</button>
+      <button class="btn-sm btn-danger" onclick="removeRow('volunteers',${v.id})">삭제</button></div></div>`).join("")
+    :`<div style="color:var(--sub);font-size:13px;padding:8px 0">배정된 봉사자가 없습니다.</div>`;
+  $("modalRoot").innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal">
+    <h3>봉사자 편집 · ${esc(dept)}</h3>${rows}
+    <button class="btn" style="margin-top:12px" onclick="addVolTo('${esc(dept)}')">＋ 봉사자 추가</button>
+    <div class="modal-actions"><span></span><button class="btn btn-primary" onclick="closeModal()">닫기</button></div></div></div>`;
+}
+// 분과/구역 카드 순서 이동 (같은 종류 안에서 인접 항목과 order 교환)
+function moveDept(id,dir){
+  const cur=state.data.departments.find(d=>String(d.id)===String(id)); if(!cur)return;
+  const kind=cur.kind||"분과";
+  const arr=state.data.departments.filter(d=>(d.kind||"분과")===kind).sort((a,b)=>(a.order||0)-(b.order||0));
+  const i=arr.findIndex(d=>String(d.id)===String(id));
+  const j=i+dir; if(j<0||j>=arr.length)return;
+  const a=arr[i],b=arr[j];
+  const t=a.order; a.order=b.order; b.order=t;
+  apiWrite('departments',a); apiWrite('departments',b); render();
+}
+
+const FAC_PINNED_BOTTOM=["만남의방(카페)","대성전"]; // 항상 맨 아래 고정(정렬 무관), 이 순서 유지
+function viewFacility(){
+  const tone=s=>s==="가용"?'green':s==="사용중"?'blue':'amber';
+  const avail=state.data.facilities.filter(f=>f.type.includes("교리실")).reduce((s,f)=>s+(f.status!=="점검중"?Number(f.cap):0),0);
+  const sort=state.facSort||{key:"rno",dir:1};
+  const normal=state.data.facilities.filter(f=>!FAC_PINNED_BOTTOM.includes(f.name));
+  const pinned=state.data.facilities.filter(f=>FAC_PINNED_BOTTOM.includes(f.name))
+    .sort((a,b)=>FAC_PINNED_BOTTOM.indexOf(a.name)-FAC_PINNED_BOTTOM.indexOf(b.name));
+  const sortedNormal=normal.slice().sort((a,b)=>{
+    let x=a[sort.key],y=b[sort.key];
+    if(sort.key==="cap"){x=Number(x)||0;y=Number(y)||0;return (x-y)*sort.dir;}
+    if(sort.key==="rno"){x=Number(String(x||"").replace(/\D/g,""))||0;y=Number(String(y||"").replace(/\D/g,""))||0;return (x-y)*sort.dir;}
+    return String(x==null?"":x).localeCompare(String(y==null?"":y),"ko")*sort.dir;
+  });
+  const sorted=sortedNormal.concat(pinned); // 만남의방·대성전은 정렬 결과와 무관하게 항상 맨 아래
+  const cols=[["rno","번호"],["name","공간"],["type","유형"],["area","면적(실측)"],["cap","수용"],["ac","냉방"],["gender","남녀구분"],["status","상태"],["note","비고"]];
+  const th=cols.map(([k,l])=>{const on=sort.key===k;const arrow=on?(sort.dir>0?" ▲":" ▼"):"";
+    return `<th style="cursor:pointer;user-select:none" onclick="sortFac('${k}')">${l}${arrow}</th>`;}).join("")+`<th>숙박 방문자</th>`+(canEdit()?"<th>관리</th>":"");
+  const occOf=(name)=>state.data.visitors.filter(g=>g.room===name);
+  const rows=sorted.map(f=>{
+    const isRoom=(f.type||"").indexOf("숙박")>-1;
+    const people=occOf(f.name);
+    const occCell=isRoom
+      ? `<button class="btn-sm" onclick="showRoomGuests('${esc(f.name)}')">${people.length?`${people.length}명 보기`:'배정 없음'}</button>`
+      : '—';
+    return `<tr>
+    <td data-label="번호" style="font-weight:600;color:var(--sub);white-space:nowrap">${esc(f.rno||"—")}</td>
+    <td data-label="공간" style="font-weight:600">${esc(f.name)}</td><td data-label="유형">${esc(f.type)}</td><td data-label="면적">${esc(f.area)}</td>
+    <td data-label="수용">${f.cap?num(f.cap)+"명":"—"}</td><td data-label="냉방">${f.ac}</td>
+    <td data-label="남녀구분">${f.gender?badge(f.gender,f.gender==="남"?'blue':f.gender==="여"?'amber':'gray'):"—"}</td>
+    <td data-label="상태">${badge(f.status,tone(f.status))}</td><td data-label="비고" style="color:var(--sub)">${esc(f.note||"")||"—"}</td>
+    <td data-label="숙박 방문자">${occCell}</td>${canEdit()?`<td data-label="관리">${rowActions('facilities',f.id)}</td>`:""}</tr>`;}).join("");
+  return secHead("성당시설","교리실 14개+대성전 · 마당 "+PARISH.yardArea+" · 열 제목을 눌러 정렬 · 번호(R01~)는 동선에 맞게 추후 변경될 수 있음 · 만남의 방·대성전은 항상 맨 아래 고정","facilities","facilities")+`
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-bottom:14px">
+    <div class="metric"><div class="l">숙박 교리실 수면 수용(추정)</div><div class="v">${num(avail)}명</div></div>
+    <div class="metric"><div class="l">대성전 교리교육</div><div class="v">400석</div></div>
+    <div class="metric"><div class="l">화장실</div><div class="v" style="color:var(--red)">남2·여2</div></div>
+  </div>
+  <div class="scroll resp-scroll"><table class="resp resp-fac"><thead><tr>${th}</tr></thead><tbody>${rows}</tbody></table></div>
+  <div class="note"><b>특이·제안사항 (체크리스트 기재)</b><br>${SPECIAL.map(s=>"· "+s).join("<br>")}</div>`;
+}
+function sortFac(key){
+  const cur=state.facSort||{key:"rno",dir:1};
+  state.facSort = cur.key===key ? {key,dir:-cur.dir} : {key,dir:1};
+  render();}
+// 교리실 숙박 방문자 보기 (방문자 명단의 배정 교리실과 연동)
+function showRoomGuests(room){
+  const ps=state.data.visitors.filter(g=>g.room===room);
+  const body=ps.length?ps.map(p=>`<div style="padding:9px 0;border-top:1px solid var(--line)">
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">${badge(p.pid||"—",'gray')}${badge(p.gno||"—",'blue')}<b>${esc(p.name)}</b>${p.sex?badge(p.sex,p.sex==="남"?'blue':'amber'):""}
+        <span style="color:var(--sub);font-size:12.5px">${esc(p.country)} · ${esc(p.lang||"")}</span>${badge(p.status,p.status==="변동중"?'amber':'green')}</div>
+      <div style="font-size:12.5px;margin-top:3px">연락처: <a href="tel:${esc(p.tel)}">${esc(p.tel)}</a></div>
+    </div>`).join("")
+    :`<div style="padding:12px 0;color:var(--sub);font-size:13px">이 교리실에 배정된 방문자가 없습니다.</div>`;
+  $("modalRoot").innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal">
+    <h3>${esc(room)} · 숙박 방문자</h3>
+    <div style="font-size:12.5px;color:var(--sub);margin-bottom:6px">총 ${ps.length}명 · 방문자 명단의 '배정 교리실'과 연동</div>
+    ${body}
+    <div class="modal-actions"><button class="btn" onclick="closeModal();go('people')">방문자 명단 편집 ›</button><button class="btn btn-primary" onclick="closeModal()">닫기</button></div>
+  </div></div>`;
+}
+
+// 홈스테이 → 배정된 방문자 (방문자 개인 데이터의 homestay 필드에서 도출)
+function derivedMatch(host){
+  const ps=state.data.visitors.filter(v=>v.homestay===host);
+  if(!ps.length)return "";
+  const countries=[...new Set(ps.map(p=>p.country))].join(", ");
+  return countries+" "+ps.length+"명";
+}
+// 홈스테이 숙박자 연동 요약 (방문자 명단 기반 성별 구성 + 수용 대비). 배정 없으면 null
+function homestayLink(h){
+  const ps=state.data.visitors.filter(v=>v.homestay===h.host);
+  if(!ps.length)return null;
+  const m=ps.filter(p=>p.sex==="남").length, f=ps.filter(p=>p.sex==="여").length, u=ps.length-m-f;
+  const parts=[]; if(m)parts.push("남"+m); if(f)parts.push("여"+f); if(u)parts.push("미상"+u);
+  const cap=Number(h.cap)||0, n=ps.length;
+  const over=cap&&n>cap;
+  return {n, cap, over, sexText:parts.join("·")||"성별 미입력"};
+}
+// 홈스테이 숙박자 상세 (방문자 명단과 연동)
+function showHomestayGuests(host){
+  const ps=state.data.visitors.filter(v=>v.homestay===host);
+  const body=ps.length?ps.map(p=>`<div style="padding:9px 0;border-top:1px solid var(--line)">
+    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">${badge(p.pid||"—",'gray')}${badge(p.gno||"—",'blue')}<b>${esc(p.name)}</b>${p.sex?badge(p.sex,p.sex==="남"?'blue':'amber'):""}
+      <span style="color:var(--sub);font-size:12.5px">${esc(p.country)} · ${esc(p.lang||"")}</span>${badge(p.status,p.status==="변동중"?'amber':'green')}</div>
+    <div style="font-size:12.5px;margin-top:3px">연락처: <a href="tel:${esc(p.tel)}">${esc(p.tel)}</a></div>
+  </div>`).join("")
+    :`<div style="padding:12px 0;color:var(--sub);font-size:13px">이 가정에 배정된 방문자가 없습니다.</div>`;
+  $("modalRoot").innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal">
+    <h3>${esc(host)} · 숙박 방문자</h3>
+    <div style="font-size:12.5px;color:var(--sub);margin-bottom:6px">총 ${ps.length}명 · 방문자 명단의 '홈스테이' 배정과 연동</div>
+    ${body}
+    <div class="modal-actions"><button class="btn" onclick="closeModal();go('people')">방문자 명단 편집 ›</button><button class="btn btn-primary" onclick="closeModal()">닫기</button></div>
+  </div></div>`;
+}
+function viewHomestay(){
+  const tone=s=>s==="입실"?'green':s==="확정"?'blue':s==="퇴실"?'gray':'amber';
+  const sort=state.hsSort||{key:"hid",dir:1};
+  const rowsData=state.data.homestays.slice().sort((a,b)=>{
+    let x=a[sort.key],y=b[sort.key];
+    if(sort.key==="cap"){x=Number(x)||0;y=Number(y)||0;return (x-y)*sort.dir;}
+    if(sort.key==="zoneApt"){x=zoneApt(a.zone);y=zoneApt(b.zone);return String(x).localeCompare(String(y),"ko")*sort.dir;}
+    if(sort.key==="reqSex"){x=reqSex(a);y=reqSex(b);return String(x).localeCompare(String(y),"ko")*sort.dir;}
+    return String(x==null?"":x).localeCompare(String(y==null?"":y),"ko")*sort.dir;
+  });
+  const cols=[["hid","번호"],["zone","구역"],["zoneApt","아파트단지"],["host","가정"],["addr","주소"],["tel","연락처"],["family","가족 인원"],["lang","언어"],["cap","수용"],["reqSex","요청 성별"],["status","상태"],["note","비고"]];
+  const th=cols.map(([k,l])=>{const on=sort.key===k;const arrow=on?(sort.dir>0?" ▲":" ▼"):"";
+    return `<th style="cursor:pointer;user-select:none" onclick="sortHS('${k}')">${l}${arrow}</th>`;}).join("")+`<th>숙박자</th>`+(canEdit()?"<th>관리</th>":"");
+  const rows=rowsData.map(h=>`<tr>
+    <td data-label="번호" style="font-weight:600;white-space:nowrap">${esc(h.hid||"—")}</td>
+    <td data-label="구역">${badge(h.zone||"—",'gray')}</td>
+    <td data-label="아파트단지" style="color:var(--sub)">${esc(zoneApt(h.zone))}</td>
+    <td data-label="가정" style="font-weight:600">${esc(h.host)}</td>
+    <td data-label="주소">${esc(h.addr)}</td>
+    <td data-label="연락처"><a href="tel:${esc(h.tel)}">${esc(h.tel)}</a></td>
+    <td data-label="가족 인원"><span class="fam-full">${famBadges(h)}</span><span class="fam-short">${famText(h,true)}</span></td>
+    <td data-label="언어">${esc(h.lang)}</td><td data-label="수용">${h.cap}명</td>
+    <td data-label="요청 성별">${(()=>{const rs=reqSex(h);return rs==="—"?'<span style="color:var(--sub)">—</span>':badge(rs,rs==="남"?'blue':rs==="여"?'amber':'gray');})()}</td>
+    <td data-label="상태">${badge(h.status,tone(h.status))}</td>
+    <td data-label="비고" style="color:var(--sub)">${esc(h.note||"")||"—"}</td>
+    <td data-label="숙박자">${(()=>{const L=homestayLink(h);if(!L)return '<span style="color:var(--amber)">미배정</span>';
+      const ps=state.data.visitors.filter(v=>v.homestay===h.host);
+      const lines=ps.map(p=>`<div style="white-space:nowrap;line-height:1.5">${badge(p.pid||"—",'gray')} ${esc(p.name)}${p.sex?" "+badge(p.sex,p.sex==="남"?'blue':'amber'):""} <span style="color:var(--sub);font-size:12px">${esc(p.country||"")}</span></div>`).join("");
+      return `${lines}<div style="margin-top:4px"><button class="btn-sm" onclick="showHomestayGuests('${esc(h.host)}')">상세 보기</button> <span style="font-size:11.5px;color:${L.over?'var(--red)':'var(--sub)'}">${L.sexText} · ${L.n}/${L.cap||"—"}명${L.over?' 초과':''}</span></div>`;})()}</td>
+    ${canEdit()?`<td data-label="관리" style="white-space:nowrap">${rowActions('homestays',h.id)}</td>`:""}</tr>`).join("");
+  return secHead("홈스테이 가정 관리","명단식 · 열 제목을 눌러 정렬 · '아파트단지'는 구역 지도 기준 1차 판독본(추후 조정 가능)","homestays","homestays")+`
+  <div class="scroll resp-scroll"><table class="resp resp-hs" style="min-width:1100px"><thead><tr>${th}</tr></thead><tbody>${rows}</tbody></table></div>
+  <p style="font-size:12px;color:var(--sub);margin-top:10px">※ 기본 정렬: 구역순. 열 제목을 누르면 해당 항목으로 오름/내림차순 전환됩니다. '아파트단지'는 구역별 지도를 참고해 자동 표시되며, 실제와 다르면 알려주시면 바로 수정합니다.</p>`;
+}
+function sortHS(key){
+  const cur=state.hsSort||{key:"hid",dir:1};
+  state.hsSort = cur.key===key ? {key,dir:-cur.dir} : {key,dir:1};
+  render();
+}
+
+// ── 고리기도 일정 ──
+function viewGori(){
+  const list=(state.data.gori||[]).slice().sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+  const todayIso=new Date().toISOString().slice(0,10);
+  const today=list.find(g=>g.date===todayIso);
+  const upcoming=list.filter(g=>g.date>=todayIso).slice(0,7);
+  const fmt=(d)=>{const dt=new Date(d+"T00:00:00");const wd=["일","월","화","수","목","금","토"][dt.getDay()];return (dt.getMonth()+1)+"/"+dt.getDate()+" ("+wd+")";};
+  const todayCard=today?`<div style="background:var(--blueBg);border:1px solid var(--blue);border-radius:12px;padding:16px 18px;margin-bottom:16px">
+    <div style="font-size:12.5px;color:var(--blue);font-weight:600;margin-bottom:4px">🙏 오늘의 고리기도 · Today</div>
+    <div style="font-size:18px;font-weight:700">${esc(today.org)}</div>
+    <div style="font-size:14px;color:var(--sub);margin-top:2px">대표: ${esc(today.rep)}</div>
+  </div>`:`<div style="background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin-bottom:16px;color:var(--sub);font-size:13px">오늘(${todayIso}) 배정된 고리기도가 없습니다.${list.length?" 기간: "+fmt(list[0].date)+" ~ "+fmt(list[list.length-1].date):""}</div>`;
+  const upHtml=upcoming.length?`<div style="margin-bottom:20px">
+    <div style="font-weight:700;margin-bottom:8px;font-size:14px">다가오는 일정 · Upcoming</div>
+    <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px">
+    ${upcoming.map(g=>`<div style="border:1px solid var(--line);border-radius:9px;padding:9px 11px;background:var(--card);${g.date===todayIso?'border-color:var(--blue)':''}">
+      <div style="font-size:11.5px;color:var(--sub)">${fmt(g.date)}${g.note?' · '+esc(g.note):''}</div>
+      <div style="font-weight:600;font-size:13.5px;margin-top:2px">${esc(g.org)}</div>
+      <div style="font-size:12px;color:var(--sub)">${esc(g.rep)}</div>
+    </div>`).join("")}
+    </div></div>`:"";
+  const th=`<th>날짜</th><th>요일</th><th>담당 단체</th><th>대표자</th><th>비고</th>`+(canEdit()?"<th>관리</th>":"");
+  const rows=list.map(g=>{const dt=new Date(g.date+"T00:00:00");const wd=["일","월","화","수","목","금","토"][dt.getDay()];
+    return `<tr class="${g.date===todayIso?'gori-today':''}">
+    <td data-label="날짜" style="white-space:nowrap">${String(g.date).slice(5).replace("-","/")}</td>
+    <td data-label="요일">${wd}</td>
+    <td data-label="담당 단체" style="font-weight:600">${esc(g.org)}</td>
+    <td data-label="대표자">${esc(g.rep)}</td>
+    <td data-label="비고" style="color:var(--sub)">${esc(g.note||"")||"—"}</td>
+    ${canEdit()?`<td data-label="관리" style="white-space:nowrap">${rowActions('gori',g.id!=null?g.id:'')}</td>`:""}</tr>`;}).join("");
+  const addBtn=canEdit()?`<button class="btn btn-primary" onclick="openAdd('gori')">＋ 일정 추가</button>`:"";
+  return `<div class="sec-row"><div><h2 class="sec">고리기도 일정 <span style="font-weight:400;color:var(--sub);font-size:14px">Prayer Chain</span></h2>
+    <p class="sec-sub">WYD 준비 · 단체별 고리기도 배정표 (${list.length}일) · 매일 한 단체가 순례 성공을 위해 기도</p></div>
+    ${addBtn}</div>
+    ${todayCard}
+    <details style="background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:16px">
+      <summary style="cursor:pointer;font-weight:700;font-size:14px">📖 기도 순서·준비물 안내 (누르면 펼쳐짐)</summary>
+      <div style="margin-top:10px;font-size:13px;line-height:1.7;color:var(--text)">
+        <b>기도 순서</b>: 성호경 → 복음낭독(요한 16,25-33 "내가 세상을 이겼다") → 묵주기도 5단(각 단마다 WYD 지향 봉헌) → 성모찬송 → 2027 서울 세계청년대회 공식기도문 → 성호경<br>
+        <b>기도 장소</b>: 각 단체 회합실 및 교리실 · <b>시간</b>: 단체가 자유롭게 정함<br>
+        <b>기도 물품</b>: 십자가·초(2)·촛대(2)·이콘·상본·제대보·기도 예식서·이콘 받침대(2) — 양업관 입구 <WYD 고리기도> 사물함 비치<br>
+        <b>개인 준비물</b>: 묵주 (기도 후 성당 입구 봉헌함에 묵주알 봉헌)<br>
+        <span style="color:var(--sub)">※ 이콘 거치대는 아크릴 소재로 파손 위험이 있으니 조심히 다루어 주세요. 기도 모습을 사진으로 찍어 분과장에게 전달 바랍니다.</span>
+        <div style="margin-top:10px"><button class="btn btn-primary" onclick="openGoriRite()">📜 고리기도 예식서 전문 보기</button></div>
+      </div>
+    </details>
+    ${upHtml}
+    <div style="font-weight:700;margin-bottom:8px;font-size:14px">전체 배정표 · Full Schedule</div>
+    <div class="scroll resp-scroll"><table class="resp resp-gori"><thead><tr>${th}</tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+// ── 지도 링크 헬퍼 (네이버 영문 · 구글) ──
+function naverSearchUrl(p){return "https://m.map.naver.com/search2/search.naver?query="+encodeURIComponent(p.query||p.name||"");}
+function naverAppUrl(p){return "nmap://search?query="+encodeURIComponent(p.query||p.name||"")+"&appname=wyd.junggye";}
+function googleSearchUrl(p){return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent((p.name||"")+(p.addr?" "+p.addr:""));}
+// 성당(pin)에서 해당 장소까지 길찾기 (구글, 이름 기반)
+function googleDirUrl(from,to){return "https://www.google.com/maps/dir/?api=1&origin="+encodeURIComponent(from)+"&destination="+encodeURIComponent(to);}
+const PLACE_CATS=["성당","교통","대회장","의료","편의","기타"];
+const PLACE_CAT_TONE={"성당":"blue","교통":"gray","대회장":"amber","의료":"red","편의":"green","기타":"gray"};
+
+function viewPlaces(){
+  const list=(state.data.places||[]).slice();
+  const pin=list.find(p=>p.pin)||list[0];
+  // 카테고리별 그룹
+  const byCat={}; list.forEach(p=>{(byCat[p.cat||"기타"]=byCat[p.cat||"기타"]||[]).push(p);});
+  const cats=PLACE_CATS.filter(c=>byCat[c]);
+  const CAT_EN={"성당":"Church","교통":"Transit","대회장":"Venue","의료":"Medical","편의":"Convenience","기타":"Other"};
+  const card=(p)=>{
+    const dir=pin&&p.id!==pin.id?`<a class="btn-sm" href="${googleDirUrl(pin.name,p.name+(p.addr?" "+p.addr:""))}" target="_blank" rel="noopener">🧭 성당→여기 길찾기 <span style="color:var(--sub)">/ Directions</span></a>`:"";
+    const catEn=CAT_EN[p.cat]||"";
+    return `<div style="border:1px solid var(--line);border-radius:11px;padding:13px 15px;background:var(--card)">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap">
+        <div style="min-width:0">
+          <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">${badge((p.cat||"기타")+(catEn?" · "+catEn:""),PLACE_CAT_TONE[p.cat]||'gray')}${p.pin?badge("본당 · Parish",'blue'):""}</div>
+          <div style="margin-top:6px"><b style="font-size:15.5px">${esc(p.name)}</b>${p.nameEn?`<span style="font-size:13px;color:var(--sub)"> / ${esc(p.nameEn)}</span>`:""}</div>
+          ${p.addr?`<div style="font-size:12.5px;color:var(--sub);margin-top:4px">📮 ${esc(p.addr)}${p.addrEn?`<br><span style="padding-left:16px">${esc(p.addrEn)}</span>`:""}</div>`:""}
+          ${p.desc?`<div style="font-size:12.5px;margin-top:5px">${esc(p.desc)}</div>`:""}
+          ${p.descEn?`<div style="font-size:12px;color:var(--sub);margin-top:2px;font-style:italic">${esc(p.descEn)}</div>`:""}
+        </div>
+        ${canEdit()?`<div style="display:flex;gap:4px;flex-shrink:0">${rowActions('places',p.id)}</div>`:""}
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px">
+        <a class="btn-sm" href="${naverSearchUrl(p)}" target="_blank" rel="noopener">🟢 네이버지도 <span style="color:var(--sub)">/ Naver</span></a>
+        <a class="btn-sm" href="${googleSearchUrl(p)}" target="_blank" rel="noopener">🗺 구글지도 <span style="color:var(--sub)">/ Google</span></a>
+        ${dir}
+      </div>
+    </div>`;
+  };
+  const sections=cats.map(c=>`<div style="margin-bottom:18px">
+    <div style="font-weight:700;margin-bottom:8px;font-size:14px">${esc(c)} <span style="color:var(--sub);font-weight:400;font-size:12px">${CAT_EN[c]?"· "+CAT_EN[c]+" ":""}· ${byCat[c].length}곳</span></div>
+    <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px">${byCat[c].map(card).join("")}</div>
+  </div>`).join("");
+  const addBtn=canEdit()?`<button class="btn btn-primary" onclick="openAdd('places')">＋ 장소 추가</button>`:"";
+  return `<div class="sec-row"><div><h2 class="sec">추천 장소 · 지도 <span style="font-weight:400;color:var(--sub);font-size:14px">Recommended Places</span></h2>
+    <p class="sec-sub">순례자용 주요 장소 · 네이버지도(영문)/구글지도로 열기 · 본당 기준 길찾기 · 한/영 병기</p></div>${addBtn}</div>
+    <div style="background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px 14px;margin-bottom:16px;font-size:12.5px;color:var(--sub)">
+      💡 <b>네이버지도(영문) / Naver Map (English)</b>는 한국에서 도보·대중교통 길찾기가 가장 정확합니다. 외국인 순례자에게는 네이버지도 앱 설치 후 언어를 English로 바꾸도록 안내하세요.<br>
+      <span style="font-style:italic">For pilgrims: Naver Map gives the most accurate walking/transit directions in Korea. Install the app and set the language to English. Google Map opens easily without an account.</span>
+    </div>
+    ${sections||'<div style="color:var(--sub)">등록된 장소가 없습니다.</div>'}`;
+}
+
+function viewSchedule(){
+  const addBtn=canEdit()?`<button class="btn btn-primary" style="white-space:nowrap" onclick="openAdd('schedule')">＋ 날짜 추가</button>`:"";
+  const header=`<div class="sec-row"><div><h2 class="sec">일정표</h2><p class="sec-sub">교구대회(7/29~8/2) + 본대회(8/3~8/8) · 날짜를 누르면 그날 상세가 아래에 표시됩니다</p></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">${addBtn}</div></div>`;
+  // 교구대회 / 본대회 구분
+  const isDID=(s)=>String(s.event||"").indexOf("교구대회")>-1;
+  const didDays=state.data.schedule.filter(isDID);
+  const mainDays=state.data.schedule.filter(s=>!isDID(s));
+
+  // 선택된 날
+  const cur=state.schedDay||state.data.schedule[0].id;
+  const day=state.data.schedule.find(s=>String(s.id)===String(cur))||state.data.schedule[0];
+
+  // 큰 일정 카드 (항상 표시) — 선택된 날은 강조
+  const bigCard=(s)=>{
+    const on=String(s.id)===String(day.id);
+    const label=esc(String(s.event||"").replace(/^\[[^\]]*\]\s*/,""));
+    return `<button onclick="pickDay(${s.id})" class="day" style="cursor:pointer;text-align:left;border:1px solid ${on?'var(--blue)':'var(--line)'};${on?'background:var(--blueBg)':'background:var(--card)'};box-shadow:${on?'0 0 0 1px var(--blue)':'none'}">
+      <div style="font-size:15px;font-weight:700;color:var(--blue)">${esc(s.date)}</div>
+      <div style="font-size:12.5px;margin:5px 0 7px;min-height:32px">${label}</div>
+      ${on?'<div style="font-size:11px;color:var(--blue);font-weight:600">▼ 상세 보기 중</div>':''}
+    </button>`;
+  };
+  const sectionLabel=(t,sub)=>`<div style="display:flex;align-items:center;gap:8px;margin:2px 0 8px"><span style="font-size:15px;font-weight:700">${t}</span><span style="font-size:12px;color:var(--sub)">${sub}</span></div>`;
+  const overview=`
+    ${sectionLabel("교구대회 (Days in the Dioceses)","7/29~8/2")}
+    <div class="timeline" style="margin-bottom:14px">${didDays.map(bigCard).join("")}</div>
+    ${sectionLabel("본대회 (World Youth Day)","8/3~8/8")}
+    <div class="timeline">${mainDays.map(bigCard).join("")}</div>`;
+
+  // 선택된 날 상세 (시간대별)
+  const slots=(day.slots||[]).slice().sort((a,b)=>String(a.time).localeCompare(String(b.time)));
+  const slotHead=["시간","내용","담당"]; if(canEdit())slotHead.push("관리");
+  const slotRows=slots.length?slots.map((sl,i)=>`<tr>
+    <td style="font-weight:600;white-space:nowrap;color:var(--blue)">${esc(sl.time)}</td>
+    <td>${esc(sl.text)}</td><td>${badge(sl.who,'blue')}</td>
+    ${canEdit()?`<td style="white-space:nowrap"><button class="btn-sm" onclick="editSlot(${day.id},${i})">편집</button><button class="btn-sm btn-danger" onclick="delSlot(${day.id},${i})">삭제</button></td>`:""}</tr>`).join("")
+    :`<tr><td colspan="${slotHead.length}" style="color:var(--sub)">등록된 시간대 항목이 없습니다.</td></tr>`;
+  const addSlot=canEdit()?`<button class="btn" style="margin-top:10px" onclick="editSlot(${day.id},-1)">＋ 시간대 항목 추가</button>`:"";
+  const detail=`
+    <div style="border-top:2px solid var(--line);margin:22px 0 14px"></div>
+    <div class="card" style="margin-bottom:12px;border-left:3px solid var(--blue)">
+      <div style="font-size:16px;font-weight:700">${esc(day.date)} · ${esc(day.event)}</div>
+      <div style="font-size:13px;color:var(--sub);margin-top:5px">준비사항: ${esc(day.prep)}</div>
+      ${canEdit()?`<div style="margin-top:8px">${rowActions('schedule',day.id)}</div>`:""}
+    </div>
+    <div class="scroll"><table><thead><tr>${slotHead.map(h=>`<th>${h}</th>`).join("")}</tr></thead><tbody>${slotRows}</tbody></table></div>${addSlot}`;
+
+  return header+overview+detail;
+}
+function pickDay(id){state.schedDay=id;render();}
+
+// 시간대 항목 편집/추가/삭제
+function editSlot(dayId,idx){
+  const day=state.data.schedule.find(s=>String(s.id)===String(dayId));
+  day.slots=day.slots||[];
+  const cur=idx>=0?day.slots[idx]:{time:"",text:"",who:""};
+  $("modalRoot").innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal">
+    <h3>${idx>=0?'시간대 편집':'시간대 추가'} · ${esc(day.date)}</h3>
+    <div class="field"><label>시간</label><input id="sl_time" value="${esc(cur.time)}" placeholder="예: 08:00 / 오전 / 상시"/></div>
+    <div class="field"><label>내용</label><textarea id="sl_text">${esc(cur.text)}</textarea></div>
+    <div class="field"><label>담당</label><input id="sl_who" value="${esc(cur.who)}" placeholder="예: 시설분과 / 안내(WYD)"/></div>
+    <div class="modal-actions"><span>${idx>=0?`<button class="btn btn-danger" onclick="delSlot(${dayId},${idx})">삭제</button>`:""}</span>
+    <span><button class="btn" onclick="closeModal()">취소</button><button class="btn btn-primary" onclick="saveSlot(${dayId},${idx})">저장</button></span></div></div></div>`;
+}
+function saveSlot(dayId,idx){
+  const day=state.data.schedule.find(s=>String(s.id)===String(dayId));
+  const obj={time:$("sl_time").value,text:$("sl_text").value,who:$("sl_who").value};
+  if(idx>=0)day.slots[idx]=obj; else day.slots.push(obj);
+  apiWrite('schedule',day);closeModal();render();
+}
+function delSlot(dayId,idx){
+  const day=state.data.schedule.find(s=>String(s.id)===String(dayId));
+  if(!confirm("이 시간대 항목을 삭제할까요?"))return;
+  day.slots.splice(idx,1);apiWrite('schedule',day);closeModal();render();
+}
+
+function viewTasks(){
+  const cats=TASKCATS.map(t=>{const need=t.min+t.reserve,short=t.assigned<need;
+    return `<div class="card" style="${short?'border-color:var(--red)':''}">
+      <div style="font-weight:600;margin-bottom:4px">${t.name}</div>
+      <div style="font-size:12.5px;color:var(--sub)">최소 ${t.min} · 예비 ${t.reserve}</div>
+      <div style="margin-top:6px">${badge((short?"부족 "+(need-t.assigned)+"명":"충원완료")+" ("+t.assigned+"/"+need+")",short?'red':'green')}</div></div>`;}).join("");
+  const sort=state.volSort||{key:"dept",dir:1};
+  const roleRank=r=>(r==="분과장"?0:1);
+  const filter=state.volFilter||"전체";
+  const teamFilter=state.volTeamFilter||"전체";
+  const deptNames=state.data.departments.slice().sort((a,b)=>(a.order||0)-(b.order||0)).map(d=>d.name);
+  // 데이터에 실제 등장하는 팀 + 표준 팀 목록 병합
+  const usedTeams=[...new Set(state.data.volunteers.map(v=>v.team).filter(Boolean))];
+  const teamNames=[...new Set([...VOL_TEAMS,...usedTeams])];
+  let volData=state.data.volunteers.slice();
+  if(filter!=="전체") volData=volData.filter(v=>v.dept===filter);
+  if(teamFilter!=="전체") volData=volData.filter(v=>v.team===teamFilter);
+  volData=volData.sort((a,b)=>{
+    if(sort.key==="role")return (roleRank(a.role)-roleRank(b.role))*sort.dir;
+    return String(a[sort.key]==null?"":a[sort.key]).localeCompare(String(b[sort.key]==null?"":b[sort.key]),"ko")*sort.dir;
+  });
+  const filterSel=`<select onchange="filterVol(this.value)" style="margin-left:8px">
+    <option value="전체" ${filter==="전체"?"selected":""}>전체 분과 (${state.data.volunteers.length}명)</option>
+    ${deptNames.map(d=>`<option value="${esc(d)}" ${filter===d?"selected":""}>${esc(d)} (${state.data.volunteers.filter(v=>v.dept===d).length}명)</option>`).join("")}
+  </select>`;
+  const teamSel=`<select onchange="filterVolTeam(this.value)" style="margin-left:8px">
+    <option value="전체" ${teamFilter==="전체"?"selected":""}>전체 팀</option>
+    ${teamNames.map(t=>`<option value="${esc(t)}" ${teamFilter===t?"selected":""}>${esc(t)} (${state.data.volunteers.filter(v=>v.team===t).length}명)</option>`).join("")}
+  </select>`;
+  const cols=[["dept","소속 분과"],["team","팀"],["role","직책"],["name","이름"],["tel","연락처"],["task","담당 임무"],["langs","언어 구사"],["note","비고"]];
+  const th=cols.map(([k,l])=>{const on=sort.key===k;const arrow=on?(sort.dir>0?" ▲":" ▼"):"";
+    return `<th style="cursor:pointer;user-select:none" onclick="sortVol('${k}')">${l}${arrow}</th>`;}).join("")+(canEdit()?"<th>관리</th>":"");
+  const rows=volData.map(v=>`<tr>
+    <td data-label="소속 분과">${badge(v.dept,'blue')}</td><td data-label="팀">${v.team?badge(v.team,'gray'):"—"}</td><td data-label="직책">${badge(v.role||"분과원",v.role==="분과장"?'amber':'gray')}</td><td data-label="이름" style="font-weight:600">${esc(v.name)}</td>
+    <td data-label="연락처"><a href="tel:${esc(v.tel)}">${esc(v.tel)}</a></td><td data-label="담당 임무">${esc(v.task||"")}</td><td data-label="언어 구사">${showLangs(v.langs)?badge(showLangs(v.langs),'green'):'—'}</td><td data-label="비고" style="color:var(--sub)">${esc(v.note||"")||"—"}</td>
+    ${canEdit()?`<td data-label="관리" style="white-space:nowrap">${rowActions('volunteers',v.id)}</td>`:""}</tr>`).join("");
+  return secHead("봉사자 명단","기능별 인원 산출 + 분과·팀별 담당 봉사자 명단(조직도와 동일 데이터)","volunteers","tasks")+`
+  <div style="font-weight:600;margin-bottom:10px">기능별 인원 산출 (최소 + 예비)</div>
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin-bottom:20px">${cats}</div>
+  <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-bottom:10px"><span style="font-weight:600">봉사자 명단</span> <span style="font-weight:400;color:var(--sub);font-size:12.5px;margin-left:6px">분과·팀 선택·열 제목 정렬</span>${filterSel}${teamSel}</div>
+  <div class="scroll resp-scroll"><table class="resp resp-vol"><thead><tr>${th}</tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+function sortVol(key){
+  const cur=state.volSort||{key:"dept",dir:1};
+  state.volSort = cur.key===key ? {key,dir:-cur.dir} : {key,dir:1};
+  render();
+}
+function filterVol(v){ state.volFilter=v; render(); }
+function filterVolTeam(v){ state.volTeamFilter=v; render(); }
+
+// CRUD 모달
+let modalCtx=null;
+// 선택+직접입력 콤보: select 목록 + "직접 입력" 옵션. 값이 목록에 없으면 입력칸 노출
+function comboSelect(key,v,opts,placeholder){
+  const inList=opts.indexOf(v)>-1;
+  const custom=(v!=="")&&!inList; // 목록에 없는 기존값 → 직접입력 모드
+  const sel=`<select id="fld_${key}" onchange="onComboChange('${key}')">
+    <option value="">${esc(placeholder||"— 선택 —")}</option>
+    ${opts.map(o=>`<option value="${esc(o)}" ${(!custom&&String(v)===o)?'selected':''}>${esc(o)}</option>`).join("")}
+    <option value="__custom__" ${custom?'selected':''}>＋ 직접 입력…</option>
+  </select>`;
+  const inp=`<input id="fld_${key}_custom" type="text" value="${custom?esc(v):''}" placeholder="직접 입력"
+    style="margin-top:6px;display:${custom?'block':'none'}" />`;
+  return sel+inp;
+}
+function onComboChange(key){
+  const sel=$("fld_"+key), inp=$("fld_"+key+"_custom");
+  if(!sel||!inp)return;
+  if(sel.value==="__custom__"){inp.style.display="block";inp.focus&&inp.focus();}
+  else{inp.style.display="none";inp.value="";}
+}
+function fieldInput(f,val){const v=val==null?"":val;
+  if(f.type==="stayplace"){
+    // 편집 중 방문자의 성별·현재 배정 파악
+    const row=modalCtx&&modalCtx.id!=null?state.data.visitors.find(x=>String(x.id)===String(modalCtx.id)):null;
+    const sex=row?row.sex:"";
+    const curVal=row?(row.room?("room:"+row.room):row.homestay?("hs:"+row.homestay):""):"";
+    const cands=stayCandidates(sex,row?row.id:null);
+    const optGroup=(kind)=>{const items=cands.filter(c=>c.kind===kind);
+      return `<optgroup label="${kind}">`+items.map(c=>{
+        const sel=c.value===curVal?"selected":"";
+        const tag=c.avail?`(${c.gender}·${c.used}/${c.cap||"∞"})`:`(${c.reason}·${c.used}/${c.cap||"∞"})`;
+        // 현재 배정된 곳은 만실/불가여도 선택 유지 가능하도록 disable 예외
+        const dis=(!c.avail&&c.value!==curVal)?"disabled":"";
+        return `<option value="${esc(c.value)}" ${sel} ${dis}>${esc(c.label)} ${tag}</option>`;
+      }).join("")+`</optgroup>`;};
+    return `<select id="fld_${f.k}">
+      <option value="" ${curVal===""?"selected":""}>— 미배정 —</option>
+      ${optGroup("교리실")}
+      ${optGroup("홈스테이")}
+    </select>
+    <div style="font-size:11.5px;color:var(--sub);margin-top:4px">성별·정원이 맞지 않는 곳은 선택 불가로 표시됩니다. 방문자 성별: <b>${sex||"미입력"}</b></div>`;
+  }
+  if(f.type==="dept"){const opts=(state.data.departments||[]).slice().sort((a,b)=>(a.order||0)-(b.order||0)).map(d=>d.name);
+    return `<select id="fld_${f.k}">${opts.map(o=>`<option value="${esc(o)}" ${String(v)===o?'selected':''}>${esc(o)}</option>`).join("")}</select>`;}
+  if(f.type==="team"){const used=[...new Set((state.data.volunteers||[]).map(x=>x.team).filter(Boolean))];const opts=[...new Set([...VOL_TEAMS,...used])];
+    return comboSelect(f.k,v,opts,"— 팀 선택 —");}
+  if(f.type==="combo"){const opts=(f.opts||[]).slice();
+    const tbl=modalCtx&&modalCtx.table?modalCtx.table:null;
+    const used=(f.from&&tbl&&state.data[tbl])?[...new Set(state.data[tbl].map(x=>x[f.from]).filter(Boolean))]:[];
+    const all=[...new Set([...opts,...used])];
+    return comboSelect(f.k,v,all,"— 선택 —");}
+  if(f.type==="select")return `<select id="fld_${f.k}">${f.opts.map(o=>`<option value="${esc(o)}" ${String(v)===o?'selected':''}>${esc(o)}</option>`).join("")}</select>`;
+  if(f.type==="textarea")return `<textarea id="fld_${f.k}">${esc(v)}</textarea>`;
+  return `<input id="fld_${f.k}" type="${f.type==='number'?'number':'text'}" value="${esc(v)}" />`;}
+function openModal(table,row){const sc=SCHEMA[table];modalCtx={table,id:row?row.id:null};const isEdit=!!row;
+  $("modalRoot").innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal">
+    <h3>${isEdit?'편집':'추가'} · ${sc.title}</h3>
+    ${sc.fields.map(f=>`<div class="field"><label>${f.label}</label>${fieldInput(f,row?row[f.k]:"")}</div>`).join("")}
+    <div class="modal-actions"><span>${isEdit?`<button class="btn btn-danger" onclick="removeRow('${table}',${row.id});closeModal()">삭제</button>`:""}</span>
+    <span><button class="btn" onclick="closeModal()">취소</button><button class="btn btn-primary" onclick="saveModal()">저장</button></span></div></div></div>`;}
+function openAdd(t){openModal(t,null);}
+function openEdit(t,id){openModal(t,state.data[t].find(r=>String(r.id)===String(id)));}
+// 고리기도 예식서 전문 모달
+function openGoriRite(){
+  const R=GORI_RITE;
+  const prepHtml=R.prep.map(t=>`<li style="margin-bottom:6px">${esc(t)}</li>`).join("");
+  const decadesHtml=R.decades.map((t,i)=>`<div style="margin-bottom:8px"><b>${i+1}단</b> ${esc(t)}<br><span style="color:var(--sub);font-size:12px">주님의 기도 · 성모송(10회) · 영광송 · 구원의 기도</span></div>`).join("");
+  $("modalRoot").innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal" style="max-width:640px">
+    <h3>2027 WYD 성공적 개최를 위한 묵주 고리기도 예식서</h3>
+    <div style="font-size:13px;line-height:1.7">
+      <div style="font-weight:700;margin:10px 0 4px">① 기도 차림 및 유의사항</div>
+      <ul style="margin:0;padding-left:18px;color:var(--text)">${prepHtml}</ul>
+      <div style="font-weight:700;margin:14px 0 4px">② 시작 · 복음 낭독</div>
+      <div style="color:var(--sub);font-size:12.5px">성호경 → 복음 낭독</div>
+      <div style="margin-top:4px"><b>${esc(R.gospel.ref)}</b></div>
+      <div style="white-space:pre-line;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-top:6px;font-size:12.5px">${esc(R.gospel.text)}</div>
+      <div style="color:var(--sub);font-size:12px;margin-top:4px">✠ 주님의 말씀입니다. ◎ 그리스도님 찬미합니다.</div>
+      <div style="font-weight:700;margin:14px 0 4px">③ 묵주기도 5단 (각 단 지향)</div>
+      <div style="color:var(--sub);font-size:12px;margin-bottom:6px">사도신경 → 주님의 기도 → 성모송(3회) → 영광송 → 구원의 기도</div>
+      ${decadesHtml}
+      <div style="color:var(--sub);font-size:12px">5단을 다 바친 후 &lt;성모 찬송&gt; 기도 (예식서 참조)</div>
+      <div style="font-weight:700;margin:14px 0 4px">④ 2027 서울 세계청년대회 공식기도문</div>
+      <div style="white-space:pre-line;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:12.5px">${esc(R.official)}</div>
+      <div style="color:var(--sub);font-size:12px;margin-top:6px">→ 성호경으로 마칩니다.</div>
+      <div style="color:var(--sub);font-size:11.5px;margin-top:10px">※ 사도신경·주님의 기도·성모송·영광송·구원의 기도·성모 찬송 전문은 준비된 인쇄 예식서를 참고하세요(양업관 입구 &lt;WYD 고리기도&gt; 사물함 비치).</div>
+    </div>
+    <div class="modal-actions"><button class="btn btn-primary" onclick="closeModal()">닫기</button></div>
+  </div></div>`;
+}
+
+function closeModal(){$("modalRoot").innerHTML="";modalCtx=null;}
+function saveModal(){const {table,id}=modalCtx,sc=SCHEMA[table],arr=state.data[table];const obj={};
+  sc.fields.forEach(f=>{let v=$("fld_"+f.k).value;
+    if((f.type==="team"||f.type==="combo")&&v==="__custom__"){const ci=$("fld_"+f.k+"_custom");v=ci?ci.value.trim():"";}
+    if(f.type==="number")v=Number(v)||0;if(f.k==="key")v=(v==="true");obj[f.k]=v;});
+  // 방문자: 숙소 배정 드롭다운(stayplace) → room/homestay 분해 + 성별·정원 자동 차단
+  if(table==='visitors'){
+    const sp=(obj.stayplace||"").trim(); delete obj.stayplace;
+    obj.room=""; obj.homestay="";
+    if(sp){
+      const sex=obj.sex||"";
+      if(sp.indexOf("room:")===0){
+        const name=sp.slice(5);
+        const f=state.data.facilities.find(x=>x.name===name);
+        if(f){
+          const g=f.gender||"공용";
+          if(!(g==="공용"||!sex||g===sex)){alert("배정 차단: "+name+"은(는) "+g+" 전용입니다. 방문자 성별("+(sex||"미입력")+")과 맞지 않습니다.");return;}
+          const used=state.data.visitors.filter(v=>String(v.id)!==String(id)&&v.room===name).length;
+          const cap=Number(f.cap)||0;
+          if(cap&&used>=cap){alert("배정 차단: "+name+"은(는) 정원("+cap+"명)이 찼습니다. 현재 "+used+"명.");return;}
+        }
+        obj.room=name;
+      }else if(sp.indexOf("hs:")===0){
+        const host=sp.slice(3);
+        const h=state.data.homestays.find(x=>x.host===host);
+        if(h){
+          const rq=reqSex(h);
+          if(!(rq==="—"||rq==="남녀"||!sex||rq===sex)){alert("배정 차단: "+host+" 가정은 "+rq+" 요청입니다. 방문자 성별("+(sex||"미입력")+")과 맞지 않습니다.");return;}
+          const used=state.data.visitors.filter(v=>String(v.id)!==String(id)&&v.homestay===host).length;
+          const cap=Number(h.cap)||0;
+          if(cap&&used>=cap){alert("배정 차단: "+host+" 가정은 수용 인원("+cap+"명)이 찼습니다. 현재 "+used+"명.");return;}
+        }
+        obj.homestay=host;
+      }
+    }
+  }
+  if(id!=null){const i=arr.findIndex(r=>String(r.id)===String(id));obj.id=arr[i].id;arr[i]={...arr[i],...obj};}
+  else{obj.id=nextId(arr);if(table==='visitors'){const n=arr.reduce((m,x)=>{const k=parseInt(String(x.pid||"").replace(/\D/g,""));return k>m?k:m;},0);obj.pid="P"+String(n+1).padStart(3,"0");}if(table==='homestays'){const n=arr.reduce((m,x)=>{const k=parseInt(String(x.hid||"").replace(/\D/g,""));return k>m?k:m;},0);obj.hid="H"+String(n+1).padStart(3,"0");}if(table==='departments')obj.order=arr.reduce((m,x)=>Math.max(m,x.order||0),0)+1;if((table==='notices'||table==='posts'||table==='qna')&&!obj.date){obj.date=new Date().toISOString().slice(0,10);}if(table==='qna'){obj.a=obj.a||"";obj.answered=false;}arr.push(obj);}
+  apiWrite(table,obj);closeModal();render();}
+function removeRow(t,id){if(!confirm("이 항목을 삭제할까요? 되돌릴 수 없습니다."))return;
+  state.data[t]=state.data[t].filter(r=>String(r.id)!==String(id));apiDelete(t,id);render();}
+
+function go(tab){state.tab=tab;render();}
+
+const VIEWS={dash:viewDash,prep:viewPrep,gori:viewGori,people:viewPeople,org:viewOrg,facility:viewFacility,homestay:viewHomestay,schedule:viewSchedule,places:viewPlaces,tasks:viewTasks,notices:viewNotices,posts:viewPosts,qna:viewQna};
+function render(){
+  $("parishName").textContent=PARISH.name+" WYD 관리 프로그램";
+  const allowed=ROLES[state.role].mods; if(!allowed.includes(state.tab))state.tab="dash";
+  $("nav").innerHTML=NAV.filter(n=>allowed.includes(n.id)).map(n=>`<button class="nav-btn ${state.tab===n.id?'active':''}" onclick="go('${n.id}')"><span class="nav-ico">${n.icon}</span><span class="nav-txt">${n.label}${n.en?`<span class="nav-en">${n.en}</span>`:""}</span></button>`).join("")
+    +`<div class="nav-note">현재 <b>${ROLES[state.role].label}</b> 화면.${canEdit()?' 각 탭에서 ＋추가·편집·삭제 가능.':' 읽기 전용 역할입니다.'}</div>`
+    +`<a class="nav-link" href="https://wydseoul.org/" target="_blank" rel="noopener"><span>🌐</span> wydseoul.org</a>`;
+  $("main").innerHTML=VIEWS[state.tab](); syncbar();
+}
+$("roleSel").addEventListener("change",e=>{state.role=e.target.value;render();});
+(async function init(){state.data=await apiGet();
+  if(!state.data.prep||!state.data.prep.length){state.data.prep=JSON.parse(JSON.stringify(PREP_DEFAULT));}
+  if(!state.data.notices)state.data.notices=[];
+  if(!state.data.posts)state.data.posts=[];
+  if(!state.data.qna)state.data.qna=[];
+  render();})();
+</script>
+</body>
+</html>
